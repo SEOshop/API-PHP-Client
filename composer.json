@@ -7,7 +7,7 @@
 		{
 			"name": "SEOshop and contributors",
 			"homepage": "https://github.com/SEOshop/API-PHP-Client/contributors"
-		},
+		}
 	],
 	"require": {
 		"php": ">=5.3.0",
