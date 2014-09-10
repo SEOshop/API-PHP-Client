@@ -5,10 +5,14 @@ This package is a convenience wrapper to communicate with the SEOshop REST-API
 
 ## Installation
 Obtain the latest version of the SEOshop PHP API client
-```git clone https://github.com/SEOshop/API-PHP-Client```
+```
+git clone https://github.com/SEOshop/API-PHP-Client
+```
 
 And include the class in your project
-```require_once('/path/to/WebshopappApiClient.php');```
+```php
+require_once('/path/to/WebshopappApiClient.php');
+```
 
 ## Getting started
 SEOshop offers a powerful set of API’s for developers to create awesome apps. The API provides developers the interface to connect with third party software such as accounting-, feedback-, e-mailmarketing- and inventory management-software, or extend with new features that interact with our core platform, such as loyalty programs, social-sharing programs or reporting tools.
