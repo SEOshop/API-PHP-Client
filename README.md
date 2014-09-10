@@ -1,3 +1,5 @@
+<img src="https://scontent-a-ams.xx.fbcdn.net/hphotos-xap1/v/t1.0-9/10443424_727097724014585_7578043792323712477_n.png?oh=0fff58db1e59b01f6a7aee61ee5b95f7&oe=54991860" width="180" height="180" alt="SEOshop" />
+
 # SEOshop PHP API client
 This package is a convenience wrapper to communicate with the SEOshop REST-API
 
