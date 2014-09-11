@@ -7,6 +7,9 @@
 This package is a convenience wrapper to communicate with the SEOshop REST-API
 
 ## Installation
+For the installation of the client, there are 2 ways. The composer way is preferable, but not always possible.
+
+### Composer
 Include the package in your `composer.json` file
 ``` json
 {
@@ -16,6 +19,7 @@ Include the package in your `composer.json` file
 }
 ```
 
+### Manual
 Obtain the latest version of the SEOshop PHP API client
 ``` bash
 git clone https://github.com/SEOshop/API-PHP-Client
