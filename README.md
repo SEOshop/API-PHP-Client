@@ -9,8 +9,10 @@ This package is a convenience wrapper to communicate with the SEOshop REST-API
 ## Installation
 Include the package in your `composer.json` file
 ``` json
-"require": {
-    "seoshop/seoshop-php": "~1.3"
+{
+    "require": {
+        "seoshop/seoshop-php": "~1.3"
+    }
 }
 ```
 
