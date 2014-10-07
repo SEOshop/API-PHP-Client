@@ -10,7 +10,7 @@ class WebshopappApiClient
     /**
      * The Api Client version (do not change!)
      */
-    const CLIENT_VERSION = '1.3.0';
+    const CLIENT_VERSION = '1.3.1';
     /**
      * The Api Hosts (do not change!)
      */
