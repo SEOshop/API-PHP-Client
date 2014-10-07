@@ -4046,7 +4046,7 @@ class WebshopappApiResourceShopScripts
      */
     public function create($fields)
     {
-        $fields = array('script' => $fields);
+        $fields = array('shopScript' => $fields);
 
         return $this->client->create('shop/scripts', $fields);
     }
@@ -4087,7 +4087,7 @@ class WebshopappApiResourceShopScripts
      */
     public function update($scriptId, $fields)
     {
-        $fields = array('script' => $fields);
+        $fields = array('shopScript' => $fields);
 
         return $this->client->update('shop/scripts/' . $scriptId, $fields);
     }
