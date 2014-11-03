@@ -14,7 +14,7 @@ Include the package in your `composer.json` file
 ``` json
 {
     "require": {
-        "seoshop/seoshop-php": "~1.3"
+        "seoshop/seoshop-php": "~1.4"
     }
 }
 ```
