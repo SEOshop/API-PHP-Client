@@ -280,6 +280,10 @@ class WebshopappApiClient
      */
     public $reviews;
     /**
+     * @var WebshopappApiResourceSets
+     */
+    public $sets;
+    /**
      * @var WebshopappApiResourceShipments
      */
     public $shipments;
@@ -572,6 +576,7 @@ class WebshopappApiClient
         $this->redirects                 = new WebshopappApiResourceRedirects( $this );
         $this->returns                   = new WebshopappApiResourceReturns( $this );
         $this->reviews                   = new WebshopappApiResourceReviews( $this );
+        $this->sets                      = new WebshopappApiResourceSets( $this );
         $this->shipments                 = new WebshopappApiResourceShipments( $this );
         $this->shipmentsMetafields       = new WebshopappApiResourceShipmentsMetafields( $this );
         $this->shipmentsProducts         = new WebshopappApiResourceShipmentsProducts( $this );
@@ -2021,6 +2026,70 @@ class WebshopappApiResourceCheckoutsProducts
     public function delete( $checkoutId, $productId )
     {
         return $this->client->delete( 'checkouts/' . $checkoutId . '/products/' . $productId );
+    }
+}
+
+class WebshopappApiResourceSets
+{
+    /**
+     * @var WebshopappApiClient
+     */
+    private $client;
+
+    public function __construct( WebshopappApiClient $client )
+    {
+        $this->client = $client;
+    }
+
+    /**
+     * @param array $fields
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function create( $fields )
+    {
+        $fields = array( 'set' => $fields );
+
+        return $this->client->create( 'sets', $fields );
+    }
+
+    /**
+     * @param int   $setId
+     * @param array $params
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function get( $setId = null, $params = array() )
+    {
+        if ( ! $setId) {
+            return $this->client->read( 'sets', $params );
+        } else {
+            return $this->client->read( 'sets/' . $setId, $params );
+        }
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return int
+     * @throws WebshopappApiException
+     */
+    public function count( $params = array() )
+    {
+        return $this->client->read( 'sets/count', $params );
+    }
+
+    /**
+     * @param int $setId
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function delete( $setId )
+    {
+        return $this->client->delete( 'sets/' . $setId );
     }
 }
 
@@ -5938,5 +6007,3 @@ class WebshopappApiResourceWebhooks
         return $this->client->delete( 'webhooks/' . $webhookId );
     }
 }
-
-?>
