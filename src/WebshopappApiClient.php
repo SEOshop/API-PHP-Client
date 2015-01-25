@@ -3359,12 +3359,13 @@ class WebshopappApiResourceOrdersCredit
     }
 
     /**
+     * @param int $orderId
      * @param array $params
      *
      * @return int
      * @throws WebshopappApiException
      */
-    public function count($params = [])
+    public function count($orderId, $params = [])
     {
         return $this->client->read('orders/' . $orderId . '/credit/count', $params);
     }
@@ -4118,12 +4119,13 @@ class WebshopappApiResourceQuotesPaymentmethods
     }
 
     /**
+     * @param int $quoteId
      * @param array $params
      *
      * @return int
      * @throws WebshopappApiException
      */
-    public function count($params = [])
+    public function count($quoteId, $params = [])
     {
         return $this->client->read('quotes/' . $quoteId . '/paymentmethods/count', $params);
     }
