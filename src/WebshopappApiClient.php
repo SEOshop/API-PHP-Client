@@ -6302,5 +6302,3 @@ class WebshopappApiResourceWebhooks
         return $this->client->delete('webhooks/' . $webhookId);
     }
 }
-
-?>
