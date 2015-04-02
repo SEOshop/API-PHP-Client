@@ -3,14 +3,14 @@
 /**
  * The Webshopapp Api Client Class
  *
- * Generated at: Mon, 26 Jan 2015 11:02:31 +0100
+ * Generated at: Thu, 02 Apr 2015 10:45:03 +0200
  */
 class WebshopappApiClient
 {
     /**
      * The Api Client version (do not change!)
      */
-    const CLIENT_VERSION = '1.5.1';
+    const CLIENT_VERSION = '1.5.2';
     /**
      * The Api Hosts (do not change!)
      */
@@ -748,7 +748,7 @@ class WebshopappApiClient
             $this->handleResponseError($responseCode, $responseBody);
         }
 
-        if ($responseBody)
+        if ($responseBody && in_array($url, array('checkouts')) === false)
         {
             $responseBody = array_shift($responseBody);
         }
