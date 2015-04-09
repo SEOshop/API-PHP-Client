@@ -1081,7 +1081,7 @@ class WebshopappApiResourceAttributes
     {
         $fields = array('attribute' => $fields);
 
-        return $this->client->create('attributes', $fields);
+        return $this->client->update('attributes', $fields);
     }
 
     /**
@@ -3678,11 +3678,18 @@ class WebshopappApiResourceProductsAttributes
      * @return array
      * @throws WebshopappApiException
      */
-    public function create($productId, $fields)
+    public function update($productId, $attributeId = null, $fields = array())
     {
-        $fields = array('productAttribute' => $fields);
-
-        return $this->client->create('products/' . $productId . '/attributes', $fields);
+        if (! $attributeId)
+        {
+            $fields = array('productAttributes' => $fields);
+            return $this->client->update('products/' . $productId . '/attributes', $fields);
+        }
+        else
+        {
+            $fields = array('productAttribute' => $fields);
+            return $this->client->update('products/' . $productId . '/attributes/' . $attributeId, $fields);
+        }
     }
 
     /**
