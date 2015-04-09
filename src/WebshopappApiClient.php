@@ -1081,7 +1081,7 @@ class WebshopappApiResourceAttributes
     {
         $fields = array('attribute' => $fields);
 
-        return $this->client->update('attributes', $fields);
+        return $this->client->create('attributes', $fields);
     }
 
     /**
