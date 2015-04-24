@@ -1970,7 +1970,7 @@ class WebshopappApiResourceCheckouts
      */
     public function create($fields)
     {
-        $fields = array('checkout' => $fields);
+        //$fields = array('checkout' => $fields);
 
         return $this->client->create('checkouts', $fields);
     }
@@ -2014,7 +2014,7 @@ class WebshopappApiResourceCheckouts
      */
     public function update($checkoutId, $fields)
     {
-        $fields = array('checkout' => $fields);
+        //$fields = array('checkout' => $fields);
 
         return $this->client->update('checkouts/' . $checkoutId, $fields);
     }
@@ -2103,7 +2103,7 @@ class WebshopappApiResourceCheckoutsProducts
      */
     public function create($checkoutId, $fields)
     {
-        $fields = array('checkoutProduct' => $fields);
+        //$fields = array('checkoutProduct' => $fields);
 
         return $this->client->create('checkouts/' . $checkoutId . '/products', $fields);
     }
@@ -2150,7 +2150,7 @@ class WebshopappApiResourceCheckoutsProducts
      */
     public function update($checkoutId, $productId, $fields)
     {
-        $fields = array('checkoutProduct' => $fields);
+        //$fields = array('checkoutProduct' => $fields);
 
         return $this->client->update('checkouts/' . $checkoutId . '/products/' . $productId, $fields);
     }
