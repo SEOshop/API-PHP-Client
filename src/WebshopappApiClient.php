@@ -2,15 +2,13 @@
 
 /**
  * The Webshopapp Api Client Class
- *
- * Generated at: Thu, 02 Apr 2015 10:45:03 +0200
  */
 class WebshopappApiClient
 {
     /**
      * The Api Client version (do not change!)
      */
-    const CLIENT_VERSION = '1.5.2';
+    const CLIENT_VERSION = '1.6.0';
     /**
      * The Api Hosts (do not change!)
      */
@@ -180,6 +178,14 @@ class WebshopappApiClient
      */
     public $files;
     /**
+     * @var WebshopappApiResourceFilters
+     */
+    public $filters;
+    /**
+     * @var WebshopappApiResourceFiltersValues
+     */
+    public $filtersValues;
+    /**
      * @var WebshopappApiResourceGroups
      */
     public $groups;
@@ -224,6 +230,10 @@ class WebshopappApiClient
      */
     public $ordersProducts;
     /**
+     * @var WebshopappApiResourceOrdersCustomstatuses
+     */
+    public $ordersCustomstatuses;
+    /**
      * @var WebshopappApiResourceOrdersEvents
      */
     public $ordersEvents;
@@ -239,6 +249,10 @@ class WebshopappApiClient
      * @var WebshopappApiResourceProductsAttributes
      */
     public $productsAttributes;
+    /**
+     * @var WebshopappApiResourceProductsFiltervalues
+     */
+    public $productsFiltervalues;
     /**
      * @var WebshopappApiResourceProductsImages
      */
@@ -418,11 +432,11 @@ class WebshopappApiClient
      */
     public function __construct($apiServer, $apiKey, $apiSecret, $apiLanguage)
     {
-        if (! function_exists('curl_init'))
+        if (!function_exists('curl_init'))
         {
             throw new WebshopAppApiException('WebshopappApiClient needs the CURL PHP extension.');
         }
-        if (! function_exists('json_decode'))
+        if (!function_exists('json_decode'))
         {
             throw new WebshopAppApiException('WebshopappApiClient needs the JSON PHP extension.');
         }
@@ -559,6 +573,8 @@ class WebshopappApiClient
         $this->discounts                 = new WebshopappApiResourceDiscounts($this);
         $this->events                    = new WebshopappApiResourceEvents($this);
         $this->files                     = new WebshopappApiResourceFiles($this);
+        $this->filters                   = new WebshopappApiResourceFilters($this);
+        $this->filtersValues             = new WebshopappApiResourceFiltersValues($this);
         $this->groups                    = new WebshopappApiResourceGroups($this);
         $this->groupsCustomers           = new WebshopappApiResourceGroupsCustomers($this);
         $this->invoices                  = new WebshopappApiResourceInvoices($this);
@@ -570,10 +586,12 @@ class WebshopappApiClient
         $this->ordersCredit              = new WebshopappApiResourceOrdersCredit($this);
         $this->ordersMetafields          = new WebshopappApiResourceOrdersMetafields($this);
         $this->ordersProducts            = new WebshopappApiResourceOrdersProducts($this);
+        $this->ordersCustomstatuses      = new WebshopappApiResourceOrdersCustomstatuses($this);
         $this->ordersEvents              = new WebshopappApiResourceOrdersEvents($this);
         $this->paymentmethods            = new WebshopappApiResourcePaymentmethods($this);
         $this->products                  = new WebshopappApiResourceProducts($this);
         $this->productsAttributes        = new WebshopappApiResourceProductsAttributes($this);
+        $this->productsFiltervalues      = new WebshopappApiResourceProductsFiltervalues($this);
         $this->productsImages            = new WebshopappApiResourceProductsImages($this);
         $this->productsMetafields        = new WebshopappApiResourceProductsMetafields($this);
         $this->productsRelations         = new WebshopappApiResourceProductsRelations($this);
@@ -659,7 +677,7 @@ class WebshopappApiClient
 
             foreach ($params as $key => $value)
             {
-                if (! is_array($value))
+                if (!is_array($value))
                 {
                     $queryParameters[] = $key . '=' . urlencode($value);
                 }
@@ -667,7 +685,7 @@ class WebshopappApiClient
 
             $queryParameters = implode('&', $queryParameters);
 
-            if (! empty($queryParameters))
+            if (!empty($queryParameters))
             {
                 $apiUrl .= '?' . $queryParameters;
             }
@@ -692,7 +710,7 @@ class WebshopappApiClient
 
         if ($method == 'post' || $method == 'put')
         {
-            if (! $payload || ! is_array($payload))
+            if (!$payload || !is_array($payload))
             {
                 throw new WebshopAppApiException(100, 'Invalid payload');
             }
@@ -836,7 +854,6 @@ class WebshopappApiClient
 
 class WebshopappApiException extends Exception
 {
-
 }
 
 class WebshopappApiResourceAccount
@@ -874,7 +891,7 @@ class WebshopappApiResourceAccountMetafields
     }
 
     /**
-     * @param int   $metafieldId
+     * @param int $metafieldId
      * @param array $params
      *
      * @return array
@@ -882,7 +899,7 @@ class WebshopappApiResourceAccountMetafields
      */
     public function get($metafieldId = null, $params = array())
     {
-        if (! $metafieldId)
+        if (!$metafieldId)
         {
             return $this->client->read('account/metafields', $params);
         }
@@ -961,7 +978,7 @@ class WebshopappApiResourceAccountRequests
     }
 
     /**
-     * @param int   $requestId
+     * @param int $requestId
      * @param array $params
      *
      * @return array
@@ -969,7 +986,7 @@ class WebshopappApiResourceAccountRequests
      */
     public function get($requestId = null, $params = array())
     {
-        if (! $requestId)
+        if (!$requestId)
         {
             return $this->client->read('account/requests', $params);
         }
@@ -1004,7 +1021,7 @@ class WebshopappApiResourceAdditionalcosts
     }
 
     /**
-     * @param int   $additionalcostId
+     * @param int $additionalcostId
      * @param array $params
      *
      * @return array
@@ -1012,7 +1029,7 @@ class WebshopappApiResourceAdditionalcosts
      */
     public function get($additionalcostId = null, $params = array())
     {
-        if (! $additionalcostId)
+        if (!$additionalcostId)
         {
             return $this->client->read('additionalcosts', $params);
         }
@@ -1034,7 +1051,7 @@ class WebshopappApiResourceAdditionalcosts
     }
 
     /**
-     * @param int   $additionalcostId
+     * @param int $additionalcostId
      * @param array $fields
      *
      * @return array
@@ -1085,7 +1102,7 @@ class WebshopappApiResourceAttributes
     }
 
     /**
-     * @param int   $attributeId
+     * @param int $attributeId
      * @param array $params
      *
      * @return array
@@ -1093,7 +1110,7 @@ class WebshopappApiResourceAttributes
      */
     public function get($attributeId = null, $params = array())
     {
-        if (! $attributeId)
+        if (!$attributeId)
         {
             return $this->client->read('attributes', $params);
         }
@@ -1115,7 +1132,7 @@ class WebshopappApiResourceAttributes
     }
 
     /**
-     * @param int   $attributeId
+     * @param int $attributeId
      * @param array $fields
      *
      * @return array
@@ -1166,7 +1183,7 @@ class WebshopappApiResourceBlogs
     }
 
     /**
-     * @param int   $blogId
+     * @param int $blogId
      * @param array $params
      *
      * @return array
@@ -1174,7 +1191,7 @@ class WebshopappApiResourceBlogs
      */
     public function get($blogId = null, $params = array())
     {
-        if (! $blogId)
+        if (!$blogId)
         {
             return $this->client->read('blogs', $params);
         }
@@ -1196,7 +1213,7 @@ class WebshopappApiResourceBlogs
     }
 
     /**
-     * @param int   $blogId
+     * @param int $blogId
      * @param array $fields
      *
      * @return array
@@ -1247,7 +1264,7 @@ class WebshopappApiResourceBlogsArticles
     }
 
     /**
-     * @param int   $articleId
+     * @param int $articleId
      * @param array $params
      *
      * @return array
@@ -1255,7 +1272,7 @@ class WebshopappApiResourceBlogsArticles
      */
     public function get($articleId = null, $params = array())
     {
-        if (! $articleId)
+        if (!$articleId)
         {
             return $this->client->read('blogs/articles', $params);
         }
@@ -1277,7 +1294,7 @@ class WebshopappApiResourceBlogsArticles
     }
 
     /**
-     * @param int   $articleId
+     * @param int $articleId
      * @param array $fields
      *
      * @return array
@@ -1315,7 +1332,7 @@ class WebshopappApiResourceBlogsArticlesImage
     }
 
     /**
-     * @param int   $articleId
+     * @param int $articleId
      * @param array $fields
      *
      * @return array
@@ -1377,7 +1394,7 @@ class WebshopappApiResourceBlogsArticlesTags
     }
 
     /**
-     * @param int   $relationId
+     * @param int $relationId
      * @param array $params
      *
      * @return array
@@ -1385,7 +1402,7 @@ class WebshopappApiResourceBlogsArticlesTags
      */
     public function get($relationId = null, $params = array())
     {
-        if (! $relationId)
+        if (!$relationId)
         {
             return $this->client->read('blogs/articles/tags', $params);
         }
@@ -1444,7 +1461,7 @@ class WebshopappApiResourceBlogsComments
     }
 
     /**
-     * @param int   $commentId
+     * @param int $commentId
      * @param array $params
      *
      * @return array
@@ -1452,7 +1469,7 @@ class WebshopappApiResourceBlogsComments
      */
     public function get($commentId = null, $params = array())
     {
-        if (! $commentId)
+        if (!$commentId)
         {
             return $this->client->read('blogs/comments', $params);
         }
@@ -1474,7 +1491,7 @@ class WebshopappApiResourceBlogsComments
     }
 
     /**
-     * @param int   $commentId
+     * @param int $commentId
      * @param array $fields
      *
      * @return array
@@ -1525,7 +1542,7 @@ class WebshopappApiResourceBlogsTags
     }
 
     /**
-     * @param int   $tagId
+     * @param int $tagId
      * @param array $params
      *
      * @return array
@@ -1533,7 +1550,7 @@ class WebshopappApiResourceBlogsTags
      */
     public function get($tagId = null, $params = array())
     {
-        if (! $tagId)
+        if (!$tagId)
         {
             return $this->client->read('blogs/tags', $params);
         }
@@ -1555,7 +1572,7 @@ class WebshopappApiResourceBlogsTags
     }
 
     /**
-     * @param int   $tagId
+     * @param int $tagId
      * @param array $fields
      *
      * @return array
@@ -1606,7 +1623,7 @@ class WebshopappApiResourceBrands
     }
 
     /**
-     * @param int   $brandId
+     * @param int $brandId
      * @param array $params
      *
      * @return array
@@ -1614,7 +1631,7 @@ class WebshopappApiResourceBrands
      */
     public function get($brandId = null, $params = array())
     {
-        if (! $brandId)
+        if (!$brandId)
         {
             return $this->client->read('brands', $params);
         }
@@ -1636,7 +1653,7 @@ class WebshopappApiResourceBrands
     }
 
     /**
-     * @param int   $brandId
+     * @param int $brandId
      * @param array $fields
      *
      * @return array
@@ -1674,7 +1691,7 @@ class WebshopappApiResourceBrandsImage
     }
 
     /**
-     * @param int   $brandId
+     * @param int $brandId
      * @param array $fields
      *
      * @return array
@@ -1723,7 +1740,7 @@ class WebshopappApiResourceCatalog
     }
 
     /**
-     * @param int   $productId
+     * @param int $productId
      * @param array $params
      *
      * @return array
@@ -1731,7 +1748,7 @@ class WebshopappApiResourceCatalog
      */
     public function get($productId = null, $params = array())
     {
-        if (! $productId)
+        if (!$productId)
         {
             return $this->client->read('catalog', $params);
         }
@@ -1779,7 +1796,7 @@ class WebshopappApiResourceCategories
     }
 
     /**
-     * @param int   $categoryId
+     * @param int $categoryId
      * @param array $params
      *
      * @return array
@@ -1787,7 +1804,7 @@ class WebshopappApiResourceCategories
      */
     public function get($categoryId = null, $params = array())
     {
-        if (! $categoryId)
+        if (!$categoryId)
         {
             return $this->client->read('categories', $params);
         }
@@ -1809,7 +1826,7 @@ class WebshopappApiResourceCategories
     }
 
     /**
-     * @param int   $categoryId
+     * @param int $categoryId
      * @param array $fields
      *
      * @return array
@@ -1847,7 +1864,7 @@ class WebshopappApiResourceCategoriesImage
     }
 
     /**
-     * @param int   $categoryId
+     * @param int $categoryId
      * @param array $fields
      *
      * @return array
@@ -1909,7 +1926,7 @@ class WebshopappApiResourceCategoriesProducts
     }
 
     /**
-     * @param int   $relationId
+     * @param int $relationId
      * @param array $params
      *
      * @return array
@@ -1917,7 +1934,7 @@ class WebshopappApiResourceCategoriesProducts
      */
     public function get($relationId = null, $params = array())
     {
-        if (! $relationId)
+        if (!$relationId)
         {
             return $this->client->read('categories/products', $params);
         }
@@ -1970,13 +1987,11 @@ class WebshopappApiResourceCheckouts
      */
     public function create($fields)
     {
-        $fields = array('checkout' => $fields);
-
         return $this->client->create('checkouts', $fields);
     }
 
     /**
-     * @param int   $checkoutId
+     * @param int $checkoutId
      * @param array $params
      *
      * @return array
@@ -1984,7 +1999,7 @@ class WebshopappApiResourceCheckouts
      */
     public function get($checkoutId = null, $params = array())
     {
-        if (! $checkoutId)
+        if (!$checkoutId)
         {
             return $this->client->read('checkouts', $params);
         }
@@ -2006,7 +2021,7 @@ class WebshopappApiResourceCheckouts
     }
 
     /**
-     * @param int   $checkoutId
+     * @param int $checkoutId
      * @param array $fields
      *
      * @return array
@@ -2014,8 +2029,6 @@ class WebshopappApiResourceCheckouts
      */
     public function update($checkoutId, $fields)
     {
-        $fields = array('checkout' => $fields);
-
         return $this->client->update('checkouts/' . $checkoutId, $fields);
     }
 
@@ -2044,7 +2057,7 @@ class WebshopappApiResourceCheckoutsOrder
     }
 
     /**
-     * @param int   $checkoutId
+     * @param int $checkoutId
      * @param array $fields
      *
      * @return array
@@ -2052,8 +2065,6 @@ class WebshopappApiResourceCheckoutsOrder
      */
     public function create($checkoutId, $fields)
     {
-        $fields = array('checkout' => $fields);
-
         return $this->client->create('checkouts/' . $checkoutId . '/order', $fields);
     }
 }
@@ -2095,7 +2106,7 @@ class WebshopappApiResourceCheckoutsProducts
     }
 
     /**
-     * @param int   $checkoutId
+     * @param int $checkoutId
      * @param array $fields
      *
      * @return array
@@ -2103,14 +2114,12 @@ class WebshopappApiResourceCheckoutsProducts
      */
     public function create($checkoutId, $fields)
     {
-        $fields = array('checkoutProduct' => $fields);
-
         return $this->client->create('checkouts/' . $checkoutId . '/products', $fields);
     }
 
     /**
-     * @param int   $checkoutId
-     * @param int   $productId
+     * @param int $checkoutId
+     * @param int $productId
      * @param array $params
      *
      * @return array
@@ -2118,7 +2127,7 @@ class WebshopappApiResourceCheckoutsProducts
      */
     public function get($checkoutId, $productId = null, $params = array())
     {
-        if (! $productId)
+        if (!$productId)
         {
             return $this->client->read('checkouts/' . $checkoutId . '/products', $params);
         }
@@ -2129,7 +2138,7 @@ class WebshopappApiResourceCheckoutsProducts
     }
 
     /**
-     * @param int   $checkoutId
+     * @param int $checkoutId
      * @param array $params
      *
      * @return int
@@ -2141,8 +2150,8 @@ class WebshopappApiResourceCheckoutsProducts
     }
 
     /**
-     * @param int   $checkoutId
-     * @param int   $productId
+     * @param int $checkoutId
+     * @param int $productId
      * @param array $fields
      *
      * @return array
@@ -2150,8 +2159,6 @@ class WebshopappApiResourceCheckoutsProducts
      */
     public function update($checkoutId, $productId, $fields)
     {
-        $fields = array('checkoutProduct' => $fields);
-
         return $this->client->update('checkouts/' . $checkoutId . '/products/' . $productId, $fields);
     }
 
@@ -2229,7 +2236,7 @@ class WebshopappApiResourceContacts
     }
 
     /**
-     * @param int   $contactId
+     * @param int $contactId
      * @param array $params
      *
      * @return array
@@ -2237,7 +2244,7 @@ class WebshopappApiResourceContacts
      */
     public function get($contactId = null, $params = array())
     {
-        if (! $contactId)
+        if (!$contactId)
         {
             return $this->client->read('contacts', $params);
         }
@@ -2272,7 +2279,7 @@ class WebshopappApiResourceCountries
     }
 
     /**
-     * @param int   $countryId
+     * @param int $countryId
      * @param array $params
      *
      * @return array
@@ -2280,7 +2287,7 @@ class WebshopappApiResourceCountries
      */
     public function get($countryId = null, $params = array())
     {
-        if (! $countryId)
+        if (!$countryId)
         {
             return $this->client->read('countries', $params);
         }
@@ -2328,7 +2335,7 @@ class WebshopappApiResourceCustomers
     }
 
     /**
-     * @param int   $customerId
+     * @param int $customerId
      * @param array $params
      *
      * @return array
@@ -2336,7 +2343,7 @@ class WebshopappApiResourceCustomers
      */
     public function get($customerId = null, $params = array())
     {
-        if (! $customerId)
+        if (!$customerId)
         {
             return $this->client->read('customers', $params);
         }
@@ -2358,7 +2365,7 @@ class WebshopappApiResourceCustomers
     }
 
     /**
-     * @param int   $customerId
+     * @param int $customerId
      * @param array $fields
      *
      * @return array
@@ -2396,7 +2403,7 @@ class WebshopappApiResourceCustomersLogin
     }
 
     /**
-     * @param int   $customerId
+     * @param int $customerId
      * @param array $fields
      *
      * @return array
@@ -2423,7 +2430,7 @@ class WebshopappApiResourceCustomersMetafields
     }
 
     /**
-     * @param int   $customerId
+     * @param int $customerId
      * @param array $fields
      *
      * @return array
@@ -2437,8 +2444,8 @@ class WebshopappApiResourceCustomersMetafields
     }
 
     /**
-     * @param int   $customerId
-     * @param int   $metafieldId
+     * @param int $customerId
+     * @param int $metafieldId
      * @param array $params
      *
      * @return array
@@ -2446,7 +2453,7 @@ class WebshopappApiResourceCustomersMetafields
      */
     public function get($customerId, $metafieldId = null, $params = array())
     {
-        if (! $metafieldId)
+        if (!$metafieldId)
         {
             return $this->client->read('customers/' . $customerId . '/metafields', $params);
         }
@@ -2457,7 +2464,7 @@ class WebshopappApiResourceCustomersMetafields
     }
 
     /**
-     * @param int   $customerId
+     * @param int $customerId
      * @param array $params
      *
      * @return int
@@ -2469,8 +2476,8 @@ class WebshopappApiResourceCustomersMetafields
     }
 
     /**
-     * @param int   $customerId
-     * @param int   $metafieldId
+     * @param int $customerId
+     * @param int $metafieldId
      * @param array $fields
      *
      * @return array
@@ -2546,7 +2553,7 @@ class WebshopappApiResourceDeliverydates
     }
 
     /**
-     * @param int   $deliverydateId
+     * @param int $deliverydateId
      * @param array $params
      *
      * @return array
@@ -2554,7 +2561,7 @@ class WebshopappApiResourceDeliverydates
      */
     public function get($deliverydateId = null, $params = array())
     {
-        if (! $deliverydateId)
+        if (!$deliverydateId)
         {
             return $this->client->read('deliverydates', $params);
         }
@@ -2576,7 +2583,7 @@ class WebshopappApiResourceDeliverydates
     }
 
     /**
-     * @param int   $deliverydateId
+     * @param int $deliverydateId
      * @param array $fields
      *
      * @return array
@@ -2627,7 +2634,7 @@ class WebshopappApiResourceDiscounts
     }
 
     /**
-     * @param int   $discountId
+     * @param int $discountId
      * @param array $params
      *
      * @return array
@@ -2635,7 +2642,7 @@ class WebshopappApiResourceDiscounts
      */
     public function get($discountId = null, $params = array())
     {
-        if (! $discountId)
+        if (!$discountId)
         {
             return $this->client->read('discounts', $params);
         }
@@ -2657,7 +2664,7 @@ class WebshopappApiResourceDiscounts
     }
 
     /**
-     * @param int   $discountId
+     * @param int $discountId
      * @param array $fields
      *
      * @return array
@@ -2695,7 +2702,7 @@ class WebshopappApiResourceEvents
     }
 
     /**
-     * @param int   $eventId
+     * @param int $eventId
      * @param array $params
      *
      * @return array
@@ -2703,7 +2710,7 @@ class WebshopappApiResourceEvents
      */
     public function get($eventId = null, $params = array())
     {
-        if (! $eventId)
+        if (!$eventId)
         {
             return $this->client->read('events', $params);
         }
@@ -2762,7 +2769,7 @@ class WebshopappApiResourceFiles
     }
 
     /**
-     * @param int   $fileId
+     * @param int $fileId
      * @param array $params
      *
      * @return array
@@ -2770,7 +2777,7 @@ class WebshopappApiResourceFiles
      */
     public function get($fileId = null, $params = array())
     {
-        if (! $fileId)
+        if (!$fileId)
         {
             return $this->client->read('files', $params);
         }
@@ -2792,7 +2799,7 @@ class WebshopappApiResourceFiles
     }
 
     /**
-     * @param int   $fileId
+     * @param int $fileId
      * @param array $fields
      *
      * @return array
@@ -2814,6 +2821,173 @@ class WebshopappApiResourceFiles
     public function delete($fileId)
     {
         return $this->client->delete('files/' . $fileId);
+    }
+}
+
+class WebshopappApiResourceFilters
+{
+    /**
+     * @var WebshopappApiClient
+     */
+    private $client;
+
+    public function __construct(WebshopappApiClient $client)
+    {
+        $this->client = $client;
+    }
+
+    /**
+     * @param array $fields
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function create($fields)
+    {
+        $fields = array('filter' => $fields);
+
+        return $this->client->create('filters', $fields);
+    }
+
+    /**
+     * @param int $filterId
+     * @param array $params
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function get($filterId = null, $params = array())
+    {
+        if (!$filterId)
+        {
+            return $this->client->read('filters', $params);
+        }
+        else
+        {
+            return $this->client->read('filters/' . $filterId, $params);
+        }
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return int
+     * @throws WebshopappApiException
+     */
+    public function count($params = array())
+    {
+        return $this->client->read('filters/count', $params);
+    }
+
+    /**
+     * @param int $filterId
+     * @param array $fields
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function update($filterId, $fields)
+    {
+        $fields = array('filter' => $fields);
+
+        return $this->client->update('filters/' . $filterId, $fields);
+    }
+
+    /**
+     * @param int $filterId
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function delete($filterId)
+    {
+        return $this->client->delete('filters/' . $filterId);
+    }
+}
+
+class WebshopappApiResourceFiltersValues
+{
+    /**
+     * @var WebshopappApiClient
+     */
+    private $client;
+
+    public function __construct(WebshopappApiClient $client)
+    {
+        $this->client = $client;
+    }
+
+    /**
+     * @param int $filterId
+     * @param int $filterValueId
+     * @param array $params
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function get($filterId, $filterValueId = null, $params = array())
+    {
+        if (!$filterValueId)
+        {
+            return $this->client->read('filters/' . $filterId . '/values', $params);
+        }
+        else
+        {
+            return $this->client->read('filters/' . $filterId . '/values/' . $filterValueId, $params);
+        }
+    }
+
+    /**
+     * @param int $filterId
+     * @param array $params
+     *
+     * @return int
+     * @throws WebshopappApiException
+     */
+    public function count($filterId, $params = array())
+    {
+        return $this->client->read('filters/' . $filterId . '/values/count', $params);
+    }
+
+    /**
+     * @param int $filterId
+     * @param array $fields
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function create($filterId, $fields)
+    {
+        $fields = array('filterValue' => $fields);
+
+        return $this->client->create('filters/' . $filterId . '/values', $fields);
+    }
+
+    /**
+     * @param int $filterId
+     * @param int $filterValueId
+     * @param array $fields
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function update($filterId, $filterValueId, $fields)
+    {
+        $fields = array('filterValue' => $fields);
+
+        return $this->client->update('filters/' . $filterId . '/values/' . $filterValueId, $fields);
+    }
+
+    /**
+     * @param int $filterId
+     * @param int $filterValueId
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function delete($filterId, $filterValueId)
+    {
+        return $this->client->delete('filters/' . $filterId . '/values/' . $filterValueId);
     }
 }
 
@@ -2843,7 +3017,7 @@ class WebshopappApiResourceGroups
     }
 
     /**
-     * @param int   $groupId
+     * @param int $groupId
      * @param array $params
      *
      * @return array
@@ -2851,7 +3025,7 @@ class WebshopappApiResourceGroups
      */
     public function get($groupId = null, $params = array())
     {
-        if (! $groupId)
+        if (!$groupId)
         {
             return $this->client->read('groups', $params);
         }
@@ -2873,7 +3047,7 @@ class WebshopappApiResourceGroups
     }
 
     /**
-     * @param int   $groupId
+     * @param int $groupId
      * @param array $fields
      *
      * @return array
@@ -2924,7 +3098,7 @@ class WebshopappApiResourceGroupsCustomers
     }
 
     /**
-     * @param int   $relationId
+     * @param int $relationId
      * @param array $params
      *
      * @return array
@@ -2932,7 +3106,7 @@ class WebshopappApiResourceGroupsCustomers
      */
     public function get($relationId = null, $params = array())
     {
-        if (! $relationId)
+        if (!$relationId)
         {
             return $this->client->read('groups/customers', $params);
         }
@@ -2978,7 +3152,7 @@ class WebshopappApiResourceInvoices
     }
 
     /**
-     * @param int   $invoiceId
+     * @param int $invoiceId
      * @param array $params
      *
      * @return array
@@ -2986,7 +3160,7 @@ class WebshopappApiResourceInvoices
      */
     public function get($invoiceId = null, $params = array())
     {
-        if (! $invoiceId)
+        if (!$invoiceId)
         {
             return $this->client->read('invoices', $params);
         }
@@ -3008,7 +3182,7 @@ class WebshopappApiResourceInvoices
     }
 
     /**
-     * @param int   $invoiceId
+     * @param int $invoiceId
      * @param array $fields
      *
      * @return array
@@ -3035,8 +3209,8 @@ class WebshopappApiResourceInvoicesItems
     }
 
     /**
-     * @param int   $invoiceId
-     * @param int   $itemId
+     * @param int $invoiceId
+     * @param int $itemId
      * @param array $params
      *
      * @return array
@@ -3044,7 +3218,7 @@ class WebshopappApiResourceInvoicesItems
      */
     public function get($invoiceId, $itemId = null, $params = array())
     {
-        if (! $itemId)
+        if (!$itemId)
         {
             return $this->client->read('invoices/' . $invoiceId . '/items', $params);
         }
@@ -3055,7 +3229,7 @@ class WebshopappApiResourceInvoicesItems
     }
 
     /**
-     * @param int   $invoiceId
+     * @param int $invoiceId
      * @param array $params
      *
      * @return int
@@ -3080,7 +3254,7 @@ class WebshopappApiResourceInvoicesMetafields
     }
 
     /**
-     * @param int   $invoiceId
+     * @param int $invoiceId
      * @param array $fields
      *
      * @return array
@@ -3094,8 +3268,8 @@ class WebshopappApiResourceInvoicesMetafields
     }
 
     /**
-     * @param int   $invoiceId
-     * @param int   $metafieldId
+     * @param int $invoiceId
+     * @param int $metafieldId
      * @param array $params
      *
      * @return array
@@ -3103,7 +3277,7 @@ class WebshopappApiResourceInvoicesMetafields
      */
     public function get($invoiceId, $metafieldId = null, $params = array())
     {
-        if (! $metafieldId)
+        if (!$metafieldId)
         {
             return $this->client->read('invoices/' . $invoiceId . '/metafields', $params);
         }
@@ -3114,7 +3288,7 @@ class WebshopappApiResourceInvoicesMetafields
     }
 
     /**
-     * @param int   $invoiceId
+     * @param int $invoiceId
      * @param array $params
      *
      * @return int
@@ -3126,8 +3300,8 @@ class WebshopappApiResourceInvoicesMetafields
     }
 
     /**
-     * @param int   $invoiceId
-     * @param int   $metafieldId
+     * @param int $invoiceId
+     * @param int $metafieldId
      * @param array $fields
      *
      * @return array
@@ -3166,7 +3340,7 @@ class WebshopappApiResourceLanguages
     }
 
     /**
-     * @param int   $languageId
+     * @param int $languageId
      * @param array $params
      *
      * @return array
@@ -3174,7 +3348,7 @@ class WebshopappApiResourceLanguages
      */
     public function get($languageId = null, $params = array())
     {
-        if (! $languageId)
+        if (!$languageId)
         {
             return $this->client->read('languages', $params);
         }
@@ -3222,7 +3396,7 @@ class WebshopappApiResourceMetafields
     }
 
     /**
-     * @param int   $metafieldId
+     * @param int $metafieldId
      * @param array $params
      *
      * @return array
@@ -3230,7 +3404,7 @@ class WebshopappApiResourceMetafields
      */
     public function get($metafieldId = null, $params = array())
     {
-        if (! $metafieldId)
+        if (!$metafieldId)
         {
             return $this->client->read('metafields', $params);
         }
@@ -3252,7 +3426,7 @@ class WebshopappApiResourceMetafields
     }
 
     /**
-     * @param int   $metafieldId
+     * @param int $metafieldId
      * @param array $fields
      *
      * @return array
@@ -3290,7 +3464,7 @@ class WebshopappApiResourceOrders
     }
 
     /**
-     * @param int   $orderId
+     * @param int $orderId
      * @param array $params
      *
      * @return array
@@ -3298,7 +3472,7 @@ class WebshopappApiResourceOrders
      */
     public function get($orderId = null, $params = array())
     {
-        if (! $orderId)
+        if (!$orderId)
         {
             return $this->client->read('orders', $params);
         }
@@ -3320,7 +3494,7 @@ class WebshopappApiResourceOrders
     }
 
     /**
-     * @param int   $orderId
+     * @param int $orderId
      * @param array $fields
      *
      * @return array
@@ -3347,7 +3521,7 @@ class WebshopappApiResourceOrdersCredit
     }
 
     /**
-     * @param int   $orderId
+     * @param int $orderId
      * @param array $fields
      *
      * @return array
@@ -3374,7 +3548,7 @@ class WebshopappApiResourceOrdersMetafields
     }
 
     /**
-     * @param int   $orderId
+     * @param int $orderId
      * @param array $fields
      *
      * @return array
@@ -3388,8 +3562,8 @@ class WebshopappApiResourceOrdersMetafields
     }
 
     /**
-     * @param int   $orderId
-     * @param int   $metafieldId
+     * @param int $orderId
+     * @param int $metafieldId
      * @param array $params
      *
      * @return array
@@ -3397,7 +3571,7 @@ class WebshopappApiResourceOrdersMetafields
      */
     public function get($orderId, $metafieldId = null, $params = array())
     {
-        if (! $metafieldId)
+        if (!$metafieldId)
         {
             return $this->client->read('orders/' . $orderId . '/metafields', $params);
         }
@@ -3408,7 +3582,7 @@ class WebshopappApiResourceOrdersMetafields
     }
 
     /**
-     * @param int   $orderId
+     * @param int $orderId
      * @param array $params
      *
      * @return int
@@ -3420,8 +3594,8 @@ class WebshopappApiResourceOrdersMetafields
     }
 
     /**
-     * @param int   $orderId
-     * @param int   $metafieldId
+     * @param int $orderId
+     * @param int $metafieldId
      * @param array $fields
      *
      * @return array
@@ -3460,8 +3634,8 @@ class WebshopappApiResourceOrdersProducts
     }
 
     /**
-     * @param int   $orderId
-     * @param int   $productId
+     * @param int $orderId
+     * @param int $productId
      * @param array $params
      *
      * @return array
@@ -3469,7 +3643,7 @@ class WebshopappApiResourceOrdersProducts
      */
     public function get($orderId, $productId = null, $params = array())
     {
-        if (! $productId)
+        if (!$productId)
         {
             return $this->client->read('orders/' . $orderId . '/products', $params);
         }
@@ -3480,7 +3654,7 @@ class WebshopappApiResourceOrdersProducts
     }
 
     /**
-     * @param int   $orderId
+     * @param int $orderId
      * @param array $params
      *
      * @return int
@@ -3489,6 +3663,87 @@ class WebshopappApiResourceOrdersProducts
     public function count($orderId, $params = array())
     {
         return $this->client->read('orders/' . $orderId . '/products/count', $params);
+    }
+}
+
+class WebshopappApiResourceOrdersCustomstatuses
+{
+    /**
+     * @var WebshopappApiClient
+     */
+    private $client;
+
+    public function __construct(WebshopappApiClient $client)
+    {
+        $this->client = $client;
+    }
+
+    /**
+     * @param array $fields
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function create($fields)
+    {
+        $fields = array('customStatus' => $fields);
+
+        return $this->client->create('orders/customstatuses', $fields);
+    }
+
+    /**
+     * @param int $customstatusId
+     * @param array $params
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function get($customstatusId = null, $params = array())
+    {
+        if (!$customstatusId)
+        {
+            return $this->client->read('orders/customstatuses', $params);
+        }
+        else
+        {
+            return $this->client->read('orders/customstatuses/' . $customstatusId, $params);
+        }
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return int
+     * @throws WebshopappApiException
+     */
+    public function count($params = array())
+    {
+        return $this->client->read('orders/customstatuses/count', $params);
+    }
+
+    /**
+     * @param int $customstatusId
+     * @param array $fields
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function update($customstatusId, $fields)
+    {
+        $fields = array('customStatus' => $fields);
+
+        return $this->client->update('orders/customstatuses/' . $customstatusId, $fields);
+    }
+
+    /**
+     * @param int $customstatusId
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function delete($customstatusId)
+    {
+        return $this->client->delete('orders/customstatuses/' . $customstatusId);
     }
 }
 
@@ -3505,7 +3760,7 @@ class WebshopappApiResourceOrdersEvents
     }
 
     /**
-     * @param int   $eventId
+     * @param int $eventId
      * @param array $params
      *
      * @return array
@@ -3513,7 +3768,7 @@ class WebshopappApiResourceOrdersEvents
      */
     public function get($eventId = null, $params = array())
     {
-        if (! $eventId)
+        if (!$eventId)
         {
             return $this->client->read('orders/events', $params);
         }
@@ -3548,7 +3803,7 @@ class WebshopappApiResourcePaymentmethods
     }
 
     /**
-     * @param int   $paymentmethodId
+     * @param int $paymentmethodId
      * @param array $params
      *
      * @return array
@@ -3556,7 +3811,7 @@ class WebshopappApiResourcePaymentmethods
      */
     public function get($paymentmethodId = null, $params = array())
     {
-        if (! $paymentmethodId)
+        if (!$paymentmethodId)
         {
             return $this->client->read('paymentmethods', $params);
         }
@@ -3604,7 +3859,7 @@ class WebshopappApiResourceProducts
     }
 
     /**
-     * @param int   $productId
+     * @param int $productId
      * @param array $params
      *
      * @return array
@@ -3612,7 +3867,7 @@ class WebshopappApiResourceProducts
      */
     public function get($productId = null, $params = array())
     {
-        if (! $productId)
+        if (!$productId)
         {
             return $this->client->read('products', $params);
         }
@@ -3634,7 +3889,7 @@ class WebshopappApiResourceProducts
     }
 
     /**
-     * @param int   $productId
+     * @param int $productId
      * @param array $fields
      *
      * @return array
@@ -3672,22 +3927,32 @@ class WebshopappApiResourceProductsAttributes
     }
 
     /**
-     * @param int   $productId
+     * @param int $productId
+     * @param int $attributeId Set to null for bulk update.
      * @param array $fields
      *
      * @return array
      * @throws WebshopappApiException
      */
-    public function create($productId, $fields)
+    public function update($productId, $attributeId, $fields)
     {
-        $fields = array('productAttribute' => $fields);
+        if (!$attributeId)
+        {
+            $fields = array('productAttributes' => $fields);
 
-        return $this->client->create('products/' . $productId . '/attributes', $fields);
+            return $this->client->update('products/' . $productId . '/attributes', $fields);
+        }
+        else
+        {
+            $fields = array('productAttribute' => $fields);
+
+            return $this->client->update('products/' . $productId . '/attributes/' . $attributeId, $fields);
+        }
     }
 
     /**
-     * @param int   $productId
-     * @param int   $attributeId
+     * @param int $productId
+     * @param int $attributeId
      * @param array $params
      *
      * @return array
@@ -3695,7 +3960,7 @@ class WebshopappApiResourceProductsAttributes
      */
     public function get($productId, $attributeId = null, $params = array())
     {
-        if (! $attributeId)
+        if (!$attributeId)
         {
             return $this->client->read('products/' . $productId . '/attributes', $params);
         }
@@ -3706,7 +3971,7 @@ class WebshopappApiResourceProductsAttributes
     }
 
     /**
-     * @param int   $productId
+     * @param int $productId
      * @param array $params
      *
      * @return int
@@ -3730,6 +3995,68 @@ class WebshopappApiResourceProductsAttributes
     }
 }
 
+class WebshopappApiResourceProductsFiltervalues
+{
+    /**
+     * @var WebshopappApiClient
+     */
+    private $client;
+
+    public function __construct(WebshopappApiClient $client)
+    {
+        $this->client = $client;
+    }
+
+    /**
+     * @param int $productId
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function get($productId)
+    {
+        return $this->client->read('products/' . $productId . '/filtervalues');
+    }
+
+    /**
+     * @param int $productId
+     * @param array $params
+     *
+     * @return int
+     * @throws WebshopappApiException
+     */
+    public function count($productId, $params = array())
+    {
+        return $this->client->read('products/' . $productId . '/filtervalues/count', $params);
+    }
+
+    /**
+     * @param int $productId
+     * @param array $fields
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function create($productId, $fields)
+    {
+        $fields = array('productFiltervalue' => $fields);
+
+        return $this->client->create('products/' . $productId . '/filtervalues', $fields);
+    }
+
+    /**
+     * @param int $productId
+     * @param int $filterValueId
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function delete($productId, $filterValueId)
+    {
+        return $this->client->delete('products/' . $productId . '/filtervalues/' . $filterValueId);
+    }
+}
+
 class WebshopappApiResourceProductsImages
 {
     /**
@@ -3743,7 +4070,7 @@ class WebshopappApiResourceProductsImages
     }
 
     /**
-     * @param int   $productId
+     * @param int $productId
      * @param array $fields
      *
      * @return array
@@ -3757,8 +4084,8 @@ class WebshopappApiResourceProductsImages
     }
 
     /**
-     * @param int   $productId
-     * @param int   $imageId
+     * @param int $productId
+     * @param int $imageId
      * @param array $params
      *
      * @return array
@@ -3766,7 +4093,7 @@ class WebshopappApiResourceProductsImages
      */
     public function get($productId, $imageId = null, $params = array())
     {
-        if (! $imageId)
+        if (!$imageId)
         {
             return $this->client->read('products/' . $productId . '/images', $params);
         }
@@ -3777,7 +4104,7 @@ class WebshopappApiResourceProductsImages
     }
 
     /**
-     * @param int   $productId
+     * @param int $productId
      * @param array $params
      *
      * @return int
@@ -3789,8 +4116,8 @@ class WebshopappApiResourceProductsImages
     }
 
     /**
-     * @param int   $productId
-     * @param int   $imageId
+     * @param int $productId
+     * @param int $imageId
      * @param array $fields
      *
      * @return array
@@ -3829,7 +4156,7 @@ class WebshopappApiResourceProductsMetafields
     }
 
     /**
-     * @param int   $productId
+     * @param int $productId
      * @param array $fields
      *
      * @return array
@@ -3843,8 +4170,8 @@ class WebshopappApiResourceProductsMetafields
     }
 
     /**
-     * @param int   $productId
-     * @param int   $metafieldId
+     * @param int $productId
+     * @param int $metafieldId
      * @param array $params
      *
      * @return array
@@ -3852,7 +4179,7 @@ class WebshopappApiResourceProductsMetafields
      */
     public function get($productId, $metafieldId = null, $params = array())
     {
-        if (! $metafieldId)
+        if (!$metafieldId)
         {
             return $this->client->read('products/' . $productId . '/metafields', $params);
         }
@@ -3863,7 +4190,7 @@ class WebshopappApiResourceProductsMetafields
     }
 
     /**
-     * @param int   $productId
+     * @param int $productId
      * @param array $params
      *
      * @return int
@@ -3875,8 +4202,8 @@ class WebshopappApiResourceProductsMetafields
     }
 
     /**
-     * @param int   $productId
-     * @param int   $metafieldId
+     * @param int $productId
+     * @param int $metafieldId
      * @param array $fields
      *
      * @return array
@@ -3915,7 +4242,7 @@ class WebshopappApiResourceProductsRelations
     }
 
     /**
-     * @param int   $productId
+     * @param int $productId
      * @param array $fields
      *
      * @return array
@@ -3929,8 +4256,8 @@ class WebshopappApiResourceProductsRelations
     }
 
     /**
-     * @param int   $productId
-     * @param int   $relationId
+     * @param int $productId
+     * @param int $relationId
      * @param array $params
      *
      * @return array
@@ -3938,7 +4265,7 @@ class WebshopappApiResourceProductsRelations
      */
     public function get($productId, $relationId = null, $params = array())
     {
-        if (! $relationId)
+        if (!$relationId)
         {
             return $this->client->read('products/' . $productId . '/relations', $params);
         }
@@ -3949,7 +4276,7 @@ class WebshopappApiResourceProductsRelations
     }
 
     /**
-     * @param int   $productId
+     * @param int $productId
      * @param array $params
      *
      * @return int
@@ -3961,8 +4288,8 @@ class WebshopappApiResourceProductsRelations
     }
 
     /**
-     * @param int   $productId
-     * @param int   $relationId
+     * @param int $productId
+     * @param int $relationId
      * @param array $fields
      *
      * @return array
@@ -4014,7 +4341,7 @@ class WebshopappApiResourceQuotes
     }
 
     /**
-     * @param int   $quoteId
+     * @param int $quoteId
      * @param array $params
      *
      * @return array
@@ -4022,7 +4349,7 @@ class WebshopappApiResourceQuotes
      */
     public function get($quoteId = null, $params = array())
     {
-        if (! $quoteId)
+        if (!$quoteId)
         {
             return $this->client->read('quotes', $params);
         }
@@ -4044,7 +4371,7 @@ class WebshopappApiResourceQuotes
     }
 
     /**
-     * @param int   $quoteId
+     * @param int $quoteId
      * @param array $fields
      *
      * @return array
@@ -4071,7 +4398,7 @@ class WebshopappApiResourceQuotesConvert
     }
 
     /**
-     * @param int   $quoteId
+     * @param int $quoteId
      * @param array $fields
      *
      * @return array
@@ -4122,7 +4449,7 @@ class WebshopappApiResourceQuotesProducts
     }
 
     /**
-     * @param int   $quoteId
+     * @param int $quoteId
      * @param array $fields
      *
      * @return array
@@ -4136,8 +4463,8 @@ class WebshopappApiResourceQuotesProducts
     }
 
     /**
-     * @param int   $quoteId
-     * @param int   $productId
+     * @param int $quoteId
+     * @param int $productId
      * @param array $params
      *
      * @return array
@@ -4145,7 +4472,7 @@ class WebshopappApiResourceQuotesProducts
      */
     public function get($quoteId, $productId = null, $params = array())
     {
-        if (! $productId)
+        if (!$productId)
         {
             return $this->client->read('quotes/' . $quoteId . '/products', $params);
         }
@@ -4156,7 +4483,7 @@ class WebshopappApiResourceQuotesProducts
     }
 
     /**
-     * @param int   $quoteId
+     * @param int $quoteId
      * @param array $params
      *
      * @return int
@@ -4168,8 +4495,8 @@ class WebshopappApiResourceQuotesProducts
     }
 
     /**
-     * @param int   $quoteId
-     * @param int   $productId
+     * @param int $quoteId
+     * @param int $productId
      * @param array $fields
      *
      * @return array
@@ -4219,7 +4546,7 @@ class WebshopappApiResourceQuotesShippingmethods
     }
 
     /**
-     * @param int   $quoteId
+     * @param int $quoteId
      * @param array $params
      *
      * @return int
@@ -4257,7 +4584,7 @@ class WebshopappApiResourceRedirects
     }
 
     /**
-     * @param int   $redirectId
+     * @param int $redirectId
      * @param array $params
      *
      * @return array
@@ -4265,7 +4592,7 @@ class WebshopappApiResourceRedirects
      */
     public function get($redirectId = null, $params = array())
     {
-        if (! $redirectId)
+        if (!$redirectId)
         {
             return $this->client->read('redirects', $params);
         }
@@ -4287,7 +4614,7 @@ class WebshopappApiResourceRedirects
     }
 
     /**
-     * @param int   $redirectId
+     * @param int $redirectId
      * @param array $fields
      *
      * @return array
@@ -4325,7 +4652,7 @@ class WebshopappApiResourceReturns
     }
 
     /**
-     * @param int   $returnId
+     * @param int $returnId
      * @param array $params
      *
      * @return array
@@ -4333,7 +4660,7 @@ class WebshopappApiResourceReturns
      */
     public function get($returnId = null, $params = array())
     {
-        if (! $returnId)
+        if (!$returnId)
         {
             return $this->client->read('returns', $params);
         }
@@ -4355,7 +4682,7 @@ class WebshopappApiResourceReturns
     }
 
     /**
-     * @param int   $returnId
+     * @param int $returnId
      * @param array $fields
      *
      * @return array
@@ -4406,7 +4733,7 @@ class WebshopappApiResourceReviews
     }
 
     /**
-     * @param int   $reviewId
+     * @param int $reviewId
      * @param array $params
      *
      * @return array
@@ -4414,7 +4741,7 @@ class WebshopappApiResourceReviews
      */
     public function get($reviewId = null, $params = array())
     {
-        if (! $reviewId)
+        if (!$reviewId)
         {
             return $this->client->read('reviews', $params);
         }
@@ -4436,7 +4763,7 @@ class WebshopappApiResourceReviews
     }
 
     /**
-     * @param int   $reviewId
+     * @param int $reviewId
      * @param array $fields
      *
      * @return array
@@ -4487,7 +4814,7 @@ class WebshopappApiResourceSets
     }
 
     /**
-     * @param int   $setId
+     * @param int $setId
      * @param array $params
      *
      * @return array
@@ -4495,7 +4822,7 @@ class WebshopappApiResourceSets
      */
     public function get($setId = null, $params = array())
     {
-        if (! $setId)
+        if (!$setId)
         {
             return $this->client->read('sets', $params);
         }
@@ -4517,7 +4844,7 @@ class WebshopappApiResourceSets
     }
 
     /**
-     * @param int   $setId
+     * @param int $setId
      * @param array $fields
      *
      * @return array
@@ -4555,7 +4882,7 @@ class WebshopappApiResourceShipments
     }
 
     /**
-     * @param int   $shipmentId
+     * @param int $shipmentId
      * @param array $params
      *
      * @return array
@@ -4563,7 +4890,7 @@ class WebshopappApiResourceShipments
      */
     public function get($shipmentId = null, $params = array())
     {
-        if (! $shipmentId)
+        if (!$shipmentId)
         {
             return $this->client->read('shipments', $params);
         }
@@ -4585,7 +4912,7 @@ class WebshopappApiResourceShipments
     }
 
     /**
-     * @param int   $shipmentId
+     * @param int $shipmentId
      * @param array $fields
      *
      * @return array
@@ -4612,7 +4939,7 @@ class WebshopappApiResourceShipmentsMetafields
     }
 
     /**
-     * @param int   $shipmentId
+     * @param int $shipmentId
      * @param array $fields
      *
      * @return array
@@ -4626,8 +4953,8 @@ class WebshopappApiResourceShipmentsMetafields
     }
 
     /**
-     * @param int   $shipmentId
-     * @param int   $metafieldId
+     * @param int $shipmentId
+     * @param int $metafieldId
      * @param array $params
      *
      * @return array
@@ -4635,7 +4962,7 @@ class WebshopappApiResourceShipmentsMetafields
      */
     public function get($shipmentId, $metafieldId = null, $params = array())
     {
-        if (! $metafieldId)
+        if (!$metafieldId)
         {
             return $this->client->read('shipments/' . $shipmentId . '/metafields', $params);
         }
@@ -4646,7 +4973,7 @@ class WebshopappApiResourceShipmentsMetafields
     }
 
     /**
-     * @param int   $shipmentId
+     * @param int $shipmentId
      * @param array $params
      *
      * @return int
@@ -4658,8 +4985,8 @@ class WebshopappApiResourceShipmentsMetafields
     }
 
     /**
-     * @param int   $shipmentId
-     * @param int   $metafieldId
+     * @param int $shipmentId
+     * @param int $metafieldId
      * @param array $fields
      *
      * @return array
@@ -4698,8 +5025,8 @@ class WebshopappApiResourceShipmentsProducts
     }
 
     /**
-     * @param int   $shipmentId
-     * @param int   $productId
+     * @param int $shipmentId
+     * @param int $productId
      * @param array $params
      *
      * @return array
@@ -4707,7 +5034,7 @@ class WebshopappApiResourceShipmentsProducts
      */
     public function get($shipmentId, $productId = null, $params = array())
     {
-        if (! $productId)
+        if (!$productId)
         {
             return $this->client->read('shipments/' . $shipmentId . '/products', $params);
         }
@@ -4718,7 +5045,7 @@ class WebshopappApiResourceShipmentsProducts
     }
 
     /**
-     * @param int   $shipmentId
+     * @param int $shipmentId
      * @param array $params
      *
      * @return int
@@ -4743,7 +5070,7 @@ class WebshopappApiResourceShippingmethods
     }
 
     /**
-     * @param int   $shippingmethodId
+     * @param int $shippingmethodId
      * @param array $params
      *
      * @return array
@@ -4751,7 +5078,7 @@ class WebshopappApiResourceShippingmethods
      */
     public function get($shippingmethodId = null, $params = array())
     {
-        if (! $shippingmethodId)
+        if (!$shippingmethodId)
         {
             return $this->client->read('shippingmethods', $params);
         }
@@ -4786,8 +5113,8 @@ class WebshopappApiResourceShippingmethodsCountries
     }
 
     /**
-     * @param int   $shippingmethodId
-     * @param int   $countryId
+     * @param int $shippingmethodId
+     * @param int $countryId
      * @param array $params
      *
      * @return array
@@ -4795,7 +5122,7 @@ class WebshopappApiResourceShippingmethodsCountries
      */
     public function get($shippingmethodId, $countryId = null, $params = array())
     {
-        if (! $countryId)
+        if (!$countryId)
         {
             return $this->client->read('shippingmethods/' . $shippingmethodId . '/countries', $params);
         }
@@ -4806,7 +5133,7 @@ class WebshopappApiResourceShippingmethodsCountries
     }
 
     /**
-     * @param int   $shippingmethodId
+     * @param int $shippingmethodId
      * @param array $params
      *
      * @return int
@@ -4831,8 +5158,8 @@ class WebshopappApiResourceShippingmethodsValues
     }
 
     /**
-     * @param int   $shippingmethodId
-     * @param int   $valueId
+     * @param int $shippingmethodId
+     * @param int $valueId
      * @param array $params
      *
      * @return array
@@ -4840,7 +5167,7 @@ class WebshopappApiResourceShippingmethodsValues
      */
     public function get($shippingmethodId, $valueId = null, $params = array())
     {
-        if (! $valueId)
+        if (!$valueId)
         {
             return $this->client->read('shippingmethods/' . $shippingmethodId . '/values', $params);
         }
@@ -4851,7 +5178,7 @@ class WebshopappApiResourceShippingmethodsValues
     }
 
     /**
-     * @param int   $shippingmethodId
+     * @param int $shippingmethodId
      * @param array $params
      *
      * @return int
@@ -4990,7 +5317,7 @@ class WebshopappApiResourceShopMetafields
     }
 
     /**
-     * @param int   $metafieldId
+     * @param int $metafieldId
      * @param array $params
      *
      * @return array
@@ -4998,7 +5325,7 @@ class WebshopappApiResourceShopMetafields
      */
     public function get($metafieldId = null, $params = array())
     {
-        if (! $metafieldId)
+        if (!$metafieldId)
         {
             return $this->client->read('shop/metafields', $params);
         }
@@ -5020,7 +5347,7 @@ class WebshopappApiResourceShopMetafields
     }
 
     /**
-     * @param int   $metafieldId
+     * @param int $metafieldId
      * @param array $fields
      *
      * @return array
@@ -5071,7 +5398,7 @@ class WebshopappApiResourceShopScripts
     }
 
     /**
-     * @param int   $scriptId
+     * @param int $scriptId
      * @param array $params
      *
      * @return array
@@ -5079,7 +5406,7 @@ class WebshopappApiResourceShopScripts
      */
     public function get($scriptId = null, $params = array())
     {
-        if (! $scriptId)
+        if (!$scriptId)
         {
             return $this->client->read('shop/scripts', $params);
         }
@@ -5101,7 +5428,7 @@ class WebshopappApiResourceShopScripts
     }
 
     /**
-     * @param int   $scriptId
+     * @param int $scriptId
      * @param array $fields
      *
      * @return array
@@ -5152,7 +5479,7 @@ class WebshopappApiResourceShopTracking
     }
 
     /**
-     * @param int   $trackingId
+     * @param int $trackingId
      * @param array $params
      *
      * @return array
@@ -5160,7 +5487,7 @@ class WebshopappApiResourceShopTracking
      */
     public function get($trackingId = null, $params = array())
     {
-        if (! $trackingId)
+        if (!$trackingId)
         {
             return $this->client->read('shop/tracking', $params);
         }
@@ -5182,7 +5509,7 @@ class WebshopappApiResourceShopTracking
     }
 
     /**
-     * @param int   $trackingId
+     * @param int $trackingId
      * @param array $fields
      *
      * @return array
@@ -5255,7 +5582,7 @@ class WebshopappApiResourceSubscriptions
     }
 
     /**
-     * @param int   $subscriptionId
+     * @param int $subscriptionId
      * @param array $params
      *
      * @return array
@@ -5263,7 +5590,7 @@ class WebshopappApiResourceSubscriptions
      */
     public function get($subscriptionId = null, $params = array())
     {
-        if (! $subscriptionId)
+        if (!$subscriptionId)
         {
             return $this->client->read('subscriptions', $params);
         }
@@ -5285,7 +5612,7 @@ class WebshopappApiResourceSubscriptions
     }
 
     /**
-     * @param int   $subscriptionId
+     * @param int $subscriptionId
      * @param array $fields
      *
      * @return array
@@ -5336,7 +5663,7 @@ class WebshopappApiResourceSuppliers
     }
 
     /**
-     * @param int   $supplierId
+     * @param int $supplierId
      * @param array $params
      *
      * @return array
@@ -5344,7 +5671,7 @@ class WebshopappApiResourceSuppliers
      */
     public function get($supplierId = null, $params = array())
     {
-        if (! $supplierId)
+        if (!$supplierId)
         {
             return $this->client->read('suppliers', $params);
         }
@@ -5366,7 +5693,7 @@ class WebshopappApiResourceSuppliers
     }
 
     /**
-     * @param int   $supplierId
+     * @param int $supplierId
      * @param array $fields
      *
      * @return array
@@ -5417,7 +5744,7 @@ class WebshopappApiResourceTags
     }
 
     /**
-     * @param int   $tagId
+     * @param int $tagId
      * @param array $params
      *
      * @return array
@@ -5425,7 +5752,7 @@ class WebshopappApiResourceTags
      */
     public function get($tagId = null, $params = array())
     {
-        if (! $tagId)
+        if (!$tagId)
         {
             return $this->client->read('tags', $params);
         }
@@ -5447,7 +5774,7 @@ class WebshopappApiResourceTags
     }
 
     /**
-     * @param int   $tagId
+     * @param int $tagId
      * @param array $fields
      *
      * @return array
@@ -5498,7 +5825,7 @@ class WebshopappApiResourceTagsProducts
     }
 
     /**
-     * @param int   $relationId
+     * @param int $relationId
      * @param array $params
      *
      * @return array
@@ -5506,7 +5833,7 @@ class WebshopappApiResourceTagsProducts
      */
     public function get($relationId = null, $params = array())
     {
-        if (! $relationId)
+        if (!$relationId)
         {
             return $this->client->read('tags/products', $params);
         }
@@ -5552,7 +5879,7 @@ class WebshopappApiResourceTaxes
     }
 
     /**
-     * @param int   $taxId
+     * @param int $taxId
      * @param array $params
      *
      * @return array
@@ -5560,7 +5887,7 @@ class WebshopappApiResourceTaxes
      */
     public function get($taxId = null, $params = array())
     {
-        if (! $taxId)
+        if (!$taxId)
         {
             return $this->client->read('taxes', $params);
         }
@@ -5608,7 +5935,7 @@ class WebshopappApiResourceTextpages
     }
 
     /**
-     * @param int   $textpageId
+     * @param int $textpageId
      * @param array $params
      *
      * @return array
@@ -5616,7 +5943,7 @@ class WebshopappApiResourceTextpages
      */
     public function get($textpageId = null, $params = array())
     {
-        if (! $textpageId)
+        if (!$textpageId)
         {
             return $this->client->read('textpages', $params);
         }
@@ -5638,7 +5965,7 @@ class WebshopappApiResourceTextpages
     }
 
     /**
-     * @param int   $textpageId
+     * @param int $textpageId
      * @param array $fields
      *
      * @return array
@@ -5689,7 +6016,7 @@ class WebshopappApiResourceTickets
     }
 
     /**
-     * @param int   $ticketId
+     * @param int $ticketId
      * @param array $params
      *
      * @return array
@@ -5697,7 +6024,7 @@ class WebshopappApiResourceTickets
      */
     public function get($ticketId = null, $params = array())
     {
-        if (! $ticketId)
+        if (!$ticketId)
         {
             return $this->client->read('tickets', $params);
         }
@@ -5719,7 +6046,7 @@ class WebshopappApiResourceTickets
     }
 
     /**
-     * @param int   $ticketId
+     * @param int $ticketId
      * @param array $fields
      *
      * @return array
@@ -5757,7 +6084,7 @@ class WebshopappApiResourceTicketsMessages
     }
 
     /**
-     * @param int   $ticketId
+     * @param int $ticketId
      * @param array $fields
      *
      * @return array
@@ -5771,8 +6098,8 @@ class WebshopappApiResourceTicketsMessages
     }
 
     /**
-     * @param int   $ticketId
-     * @param int   $messageId
+     * @param int $ticketId
+     * @param int $messageId
      * @param array $params
      *
      * @return array
@@ -5780,7 +6107,7 @@ class WebshopappApiResourceTicketsMessages
      */
     public function get($ticketId, $messageId = null, $params = array())
     {
-        if (! $messageId)
+        if (!$messageId)
         {
             return $this->client->read('tickets/' . $ticketId . '/messages', $params);
         }
@@ -5791,7 +6118,7 @@ class WebshopappApiResourceTicketsMessages
     }
 
     /**
-     * @param int   $ticketId
+     * @param int $ticketId
      * @param array $params
      *
      * @return int
@@ -5803,8 +6130,8 @@ class WebshopappApiResourceTicketsMessages
     }
 
     /**
-     * @param int   $ticketId
-     * @param int   $messageId
+     * @param int $ticketId
+     * @param int $messageId
      * @param array $fields
      *
      * @return array
@@ -5878,7 +6205,7 @@ class WebshopappApiResourceTypes
     }
 
     /**
-     * @param int   $typeId
+     * @param int $typeId
      * @param array $params
      *
      * @return array
@@ -5886,7 +6213,7 @@ class WebshopappApiResourceTypes
      */
     public function get($typeId = null, $params = array())
     {
-        if (! $typeId)
+        if (!$typeId)
         {
             return $this->client->read('types', $params);
         }
@@ -5908,7 +6235,7 @@ class WebshopappApiResourceTypes
     }
 
     /**
-     * @param int   $typeId
+     * @param int $typeId
      * @param array $fields
      *
      * @return array
@@ -5959,7 +6286,7 @@ class WebshopappApiResourceTypesAttributes
     }
 
     /**
-     * @param int   $relationId
+     * @param int $relationId
      * @param array $params
      *
      * @return array
@@ -5967,7 +6294,7 @@ class WebshopappApiResourceTypesAttributes
      */
     public function get($relationId = null, $params = array())
     {
-        if (! $relationId)
+        if (!$relationId)
         {
             return $this->client->read('types/attributes', $params);
         }
@@ -6026,7 +6353,7 @@ class WebshopappApiResourceVariants
     }
 
     /**
-     * @param int   $variantId
+     * @param int $variantId
      * @param array $params
      *
      * @return array
@@ -6034,7 +6361,7 @@ class WebshopappApiResourceVariants
      */
     public function get($variantId = null, $params = array())
     {
-        if (! $variantId)
+        if (!$variantId)
         {
             return $this->client->read('variants', $params);
         }
@@ -6056,7 +6383,7 @@ class WebshopappApiResourceVariants
     }
 
     /**
-     * @param int   $variantId
+     * @param int $variantId
      * @param array $fields
      *
      * @return array
@@ -6094,7 +6421,7 @@ class WebshopappApiResourceVariantsMetafields
     }
 
     /**
-     * @param int   $variantId
+     * @param int $variantId
      * @param array $fields
      *
      * @return array
@@ -6108,8 +6435,8 @@ class WebshopappApiResourceVariantsMetafields
     }
 
     /**
-     * @param int   $variantId
-     * @param int   $metafieldId
+     * @param int $variantId
+     * @param int $metafieldId
      * @param array $params
      *
      * @return array
@@ -6117,7 +6444,7 @@ class WebshopappApiResourceVariantsMetafields
      */
     public function get($variantId, $metafieldId = null, $params = array())
     {
-        if (! $metafieldId)
+        if (!$metafieldId)
         {
             return $this->client->read('variants/' . $variantId . '/metafields', $params);
         }
@@ -6128,7 +6455,7 @@ class WebshopappApiResourceVariantsMetafields
     }
 
     /**
-     * @param int   $variantId
+     * @param int $variantId
      * @param array $params
      *
      * @return int
@@ -6140,8 +6467,8 @@ class WebshopappApiResourceVariantsMetafields
     }
 
     /**
-     * @param int   $variantId
-     * @param int   $metafieldId
+     * @param int $variantId
+     * @param int $metafieldId
      * @param array $fields
      *
      * @return array
@@ -6206,7 +6533,7 @@ class WebshopappApiResourceVariantsMovements
     }
 
     /**
-     * @param int   $movementId
+     * @param int $movementId
      * @param array $params
      *
      * @return array
@@ -6214,7 +6541,7 @@ class WebshopappApiResourceVariantsMovements
      */
     public function get($movementId = null, $params = array())
     {
-        if (! $movementId)
+        if (!$movementId)
         {
             return $this->client->read('variants/movements', $params);
         }
@@ -6262,7 +6589,7 @@ class WebshopappApiResourceWebhooks
     }
 
     /**
-     * @param int   $webhookId
+     * @param int $webhookId
      * @param array $params
      *
      * @return array
@@ -6270,7 +6597,7 @@ class WebshopappApiResourceWebhooks
      */
     public function get($webhookId = null, $params = array())
     {
-        if (! $webhookId)
+        if (!$webhookId)
         {
             return $this->client->read('webhooks', $params);
         }

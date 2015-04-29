@@ -1,22 +1,22 @@
 {
-	"name": "seoshop/seoshop-php",
-	"description": "PHP client for the SEOshop API",
-	"keywords": ["api","client", "php"],
-	"homepage": "http://developers.seoshop.com",
-	"license": "MIT",
-	"authors": [
-		{
-			"name": "SEOshop and contributors",
-			"homepage": "https://github.com/SEOshop/API-PHP-Client/contributors"
-		}
-	],
-	"require": {
-		"php": ">=5.3.0",
-		"ext-curl": "*",
-		"ext-json": "*",
-		"ext-mbstring": "*"
-	},
-	"autoload": {
-		"files": ["src/WebshopappApiClient.php"]
-	}
+    "name": "seoshop/seoshop-php",
+    "description": "PHP client for the SEOshop API",
+    "keywords": ["api", "client", "php"],
+    "homepage": "http://developers.seoshop.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "SEOshop and contributors",
+            "homepage": "https://github.com/SEOshop/API-PHP-Client/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "ext-curl": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*"
+    },
+    "autoload": {
+        "files": ["src/WebshopappApiClient.php"]
+    }
 }
