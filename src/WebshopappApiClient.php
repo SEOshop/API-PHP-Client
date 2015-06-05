@@ -8,7 +8,7 @@ class WebshopappApiClient
     /**
      * The Api Client version (do not change!)
      */
-    const CLIENT_VERSION = '1.6.0';
+    const CLIENT_VERSION = '1.7.0';
     /**
      * The Api Hosts (do not change!)
      */
@@ -173,6 +173,10 @@ class WebshopappApiClient
      * @var WebshopappApiResourceEvents
      */
     public $events;
+    /**
+     * @var WebshopappApiResourceExternal_services
+     */
+    public $external_services;
     /**
      * @var WebshopappApiResourceFiles
      */
@@ -382,6 +386,14 @@ class WebshopappApiClient
      */
     public $textpages;
     /**
+     * @var WebshopappApiResourceThemeCategories
+     */
+    public $themeCategories;
+    /**
+     * @var WebshopappApiResourceThemeProducts
+     */
+    public $themeProducts;
+    /**
      * @var WebshopappApiResourceTickets
      */
     public $tickets;
@@ -572,6 +584,7 @@ class WebshopappApiClient
         $this->deliverydates             = new WebshopappApiResourceDeliverydates($this);
         $this->discounts                 = new WebshopappApiResourceDiscounts($this);
         $this->events                    = new WebshopappApiResourceEvents($this);
+        $this->external_services         = new WebshopappApiResourceExternal_services($this);
         $this->files                     = new WebshopappApiResourceFiles($this);
         $this->filters                   = new WebshopappApiResourceFilters($this);
         $this->filtersValues             = new WebshopappApiResourceFiltersValues($this);
@@ -624,6 +637,8 @@ class WebshopappApiClient
         $this->tagsProducts              = new WebshopappApiResourceTagsProducts($this);
         $this->taxes                     = new WebshopappApiResourceTaxes($this);
         $this->textpages                 = new WebshopappApiResourceTextpages($this);
+        $this->themeCategories           = new WebshopappApiResourceThemeCategories($this);
+        $this->themeProducts             = new WebshopappApiResourceThemeProducts($this);
         $this->tickets                   = new WebshopappApiResourceTickets($this);
         $this->ticketsMessages           = new WebshopappApiResourceTicketsMessages($this);
         $this->time                      = new WebshopappApiResourceTime($this);
@@ -766,7 +781,7 @@ class WebshopappApiClient
             $this->handleResponseError($responseCode, $responseBody);
         }
 
-        if ($responseBody && in_array($url, array('checkouts')) === false)
+        if ($responseBody && preg_match('/^checkout/i', $url) !== 1)
         {
             $responseBody = array_shift($responseBody);
         }
@@ -2743,6 +2758,73 @@ class WebshopappApiResourceEvents
     }
 }
 
+class WebshopappApiResourceExternal_services
+{
+    /**
+     * @var WebshopappApiClient
+     */
+    private $client;
+
+    public function __construct(WebshopappApiClient $client)
+    {
+        $this->client = $client;
+    }
+
+    /**
+     * @param array $fields
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function create($fields)
+    {
+        $fields = array('externalService' => $fields);
+
+        return $this->client->create('external_services', $fields);
+    }
+
+    /**
+     * @param int $externalserviceId
+     * @param array $params
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function get($externalserviceId = null, $params = array())
+    {
+        if (!$externalserviceId)
+        {
+            return $this->client->read('external_services', $params);
+        }
+        else
+        {
+            return $this->client->read('external_services/' . $externalserviceId, $params);
+        }
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return int
+     * @throws WebshopappApiException
+     */
+    public function count($params = array())
+    {
+        return $this->client->read('external_services/count', $params);
+    }
+
+    /**
+     * @param int $externalserviceId
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function delete($externalserviceId)
+    {
+        return $this->client->delete('external_services/' . $externalserviceId);
+    }
+}
+
 class WebshopappApiResourceFiles
 {
     /**
@@ -4434,6 +4516,17 @@ class WebshopappApiResourceQuotesPaymentmethods
     {
         return $this->client->read('quotes/' . $quoteId . '/paymentmethods');
     }
+
+    /**
+     * @param array $params
+     *
+     * @return int
+     * @throws WebshopappApiException
+     */
+    public function count($params = array())
+    {
+        return $this->client->read('quotes/' . $quoteId . '/paymentmethods/count', $params);
+    }
 }
 
 class WebshopappApiResourceQuotesProducts
@@ -5987,6 +6080,168 @@ class WebshopappApiResourceTextpages
     public function delete($textpageId)
     {
         return $this->client->delete('textpages/' . $textpageId);
+    }
+}
+
+class WebshopappApiResourceThemeCategories
+{
+    /**
+     * @var WebshopappApiClient
+     */
+    private $client;
+
+    public function __construct(WebshopappApiClient $client)
+    {
+        $this->client = $client;
+    }
+
+    /**
+     * @param array $fields
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function create($fields)
+    {
+        $fields = array('themeCategory' => $fields);
+
+        return $this->client->create('theme/categories', $fields);
+    }
+
+    /**
+     * @param int $categoryId
+     * @param array $params
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function get($categoryId = null, $params = array())
+    {
+        if (!$categoryId)
+        {
+            return $this->client->read('theme/categories', $params);
+        }
+        else
+        {
+            return $this->client->read('theme/categories/' . $categoryId, $params);
+        }
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return int
+     * @throws WebshopappApiException
+     */
+    public function count($params = array())
+    {
+        return $this->client->read('theme/categories/count', $params);
+    }
+
+    /**
+     * @param int $categoryId
+     * @param array $fields
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function update($categoryId, $fields)
+    {
+        $fields = array('themeCategory' => $fields);
+
+        return $this->client->update('theme/categories/' . $categoryId, $fields);
+    }
+
+    /**
+     * @param int $categoryId
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function delete($categoryId)
+    {
+        return $this->client->delete('theme/categories/' . $categoryId);
+    }
+}
+
+class WebshopappApiResourceThemeProducts
+{
+    /**
+     * @var WebshopappApiClient
+     */
+    private $client;
+
+    public function __construct(WebshopappApiClient $client)
+    {
+        $this->client = $client;
+    }
+
+    /**
+     * @param array $fields
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function create($fields)
+    {
+        $fields = array('themeProducts' => $fields);
+
+        return $this->client->create('theme/products', $fields);
+    }
+
+    /**
+     * @param int $productId
+     * @param array $params
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function get($productId = null, $params = array())
+    {
+        if (!$productId)
+        {
+            return $this->client->read('theme/products', $params);
+        }
+        else
+        {
+            return $this->client->read('theme/products/' . $productId, $params);
+        }
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return int
+     * @throws WebshopappApiException
+     */
+    public function count($params = array())
+    {
+        return $this->client->read('theme/products/count', $params);
+    }
+
+    /**
+     * @param int $productId
+     * @param array $fields
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function update($productId, $fields)
+    {
+        $fields = array('themeProduct' => $fields);
+
+        return $this->client->update('theme/products/' . $productId, $fields);
+    }
+
+    /**
+     * @param int $productId
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function delete($productId)
+    {
+        return $this->client->delete('theme/products/' . $productId);
     }
 }
 
