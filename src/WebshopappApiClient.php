@@ -6872,6 +6872,19 @@ class WebshopappApiResourceWebhooks
     {
         return $this->client->read('webhooks/count', $params);
     }
+    
+    /**
+     * @param int $webhookId
+     * @param array $fields
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function update($webhookId, $fields)
+    {
+        $fields = array('webhook' => $fields);
+        return $this->client->update('webhooks/' . $webhookId, $fields);
+    }
 
     /**
      * @param int $webhookId
