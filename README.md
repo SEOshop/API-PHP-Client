@@ -49,7 +49,9 @@ require 'vendor/autoload.php';
 $client = new WebshopappApiClient('[api-server]', '[api-key]', '[api-secret]', '[language]');
 
 $shopInfo = $client->shop->get();
+```
 
+__Explanation__
 [api-server]
 Available server(-clusters): live, eu1, us1
 
@@ -61,7 +63,6 @@ The API secret you've received or created
 
 [language]
 Language shortcode that's available in the shop you're connecting to
-```
 
 ## Getting started
 SEOshop offers a powerful set of API’s for developers to create awesome apps. The API provides developers the interface to connect with third party software such as accounting-, feedback-, e-mailmarketing- and inventory management-software, or extend with new features that interact with our core platform, such as loyalty programs, social-sharing programs or reporting tools.
