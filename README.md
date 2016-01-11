@@ -46,9 +46,21 @@ There are a lot of API resources that are accessible through this client. You ca
 <?php
 require 'vendor/autoload.php';
 
-$client = new WebshopappApiClient('live', '[your-api-key]', '[your-api-secret]', 'en');
+$client = new WebshopappApiClient('[api-server]', '[api-key]', '[api-secret]', '[language]');
 
 $shopInfo = $client->shop->get();
+
+[api-server]
+Available server(-clusters): live, eu1, us1
+
+[api-key]
+The API key you've received or created
+
+[api-secret]
+The API secret you've received or created
+
+[language]
+Language shortcode that's available in the shop you're connecting to
 ```
 
 ## Getting started
