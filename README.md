@@ -52,6 +52,7 @@ $shopInfo = $client->shop->get();
 ```
 
 __Explanation__
+
 [api-server]
 Available server(-clusters): live, eu1, us1
 
