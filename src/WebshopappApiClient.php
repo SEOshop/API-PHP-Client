@@ -16,7 +16,7 @@ class WebshopappApiClient
     const SERVER_HOST_TEST  = 'https://api.webshopapp.net/';
     const SERVER_HOST_LIVE  = 'https://api.webshopapp.com/';
     const SERVER_EU1_LIVE   = 'https://api.webshopapp.com/';
-    const SERVER_US1_LIVE   = 'https://store.shoplightspeed.com/';
+    const SERVER_US1_LIVE   = 'https://api.shoplightspeed.com/';
 
     /**
      * @var string
