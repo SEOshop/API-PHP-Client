@@ -1,4 +1,5 @@
 <?php
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * The Webshopapp Api Client Class
@@ -437,6 +438,11 @@ class WebshopappApiClient
     public $webhooks;
 
     /**
+     * @var \GuzzleHttp\Client
+     */
+    private $httpClient;
+
+    /**
      * @param string $apiKey      The api key
      * @param string $apiSecret   The api secret
      * @param string $apiLanguage The language to use the api in
@@ -446,10 +452,6 @@ class WebshopappApiClient
      */
     public function __construct($apiServer, $apiKey, $apiSecret, $apiLanguage)
     {
-        if (!function_exists('curl_init'))
-        {
-            throw new WebshopAppApiException('WebshopappApiClient needs the CURL PHP extension.');
-        }
         if (!function_exists('json_decode'))
         {
             throw new WebshopAppApiException('WebshopappApiClient needs the JSON PHP extension.');
@@ -461,6 +463,8 @@ class WebshopappApiClient
         $this->setApiLanguage($apiLanguage);
 
         $this->registerResources();
+
+        $this->httpClient = new GuzzleHttp\Client();
     }
 
     /**
@@ -733,100 +737,124 @@ class WebshopappApiClient
     {
         $this->checkLoginCredentials();
 
-        if ($method == 'post' || $method == 'put')
-        {
-            if (!$payload || !is_array($payload))
+        $method = strtoupper($method);
+
+        try {
+            if ($method == 'post' || $method == 'put')
             {
-                throw new WebshopAppApiException(100, 'Invalid payload');
+                if (!$payload || !is_array($payload))
+                {
+                    throw new WebshopAppApiException(100, 'Invalid payload');
+                }
             }
 
-            $curlOptions = array(
-                CURLOPT_URL           => $this->getUrl($url),
-                CURLOPT_CUSTOMREQUEST => strtoupper($method),
-                CURLOPT_HTTPHEADER    => array('Content-Type: application/json'),
-                CURLOPT_POSTFIELDS    => json_encode($payload),
+            $response = $this->httpClient->request(
+                $method,
+                $this->getUrl($url, $payload),
+                [
+                    'headers' => [
+                        'Content-Type' => 'application/json',
+                        'User-Agent'   => 'WebshopappApiClient/' . self::CLIENT_VERSION . ' (PHP/' . phpversion() . ')',
+                    ],
+                    'json' => $payload
+                ]
             );
+
+            $responseBody = json_decode($response->getBody(), true);
+            $responseCode = $response->getStatusCode();
+
+            $this->apiCallsMade ++;
+
+            if ($responseCode < 200 || $responseCode > 299 || ($responseBody && array_key_exists('error', $responseBody)))
+            {
+                $this->handleResponseError($response);
+            }
+
+            if ($responseBody && preg_match('/^checkout/i', $url) !== 1)
+            {
+                $responseBody = array_shift($responseBody);
+            }
+
+            return $responseBody;
+
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            $this->handleResponseError($e->getResponse());
         }
-        elseif ($method == 'delete')
-        {
-            $curlOptions = array(
-                CURLOPT_URL           => $this->getUrl($url),
-                CURLOPT_CUSTOMREQUEST => 'DELETE',
-            );
-        }
-        else
-        {
-            $curlOptions = array(
-                CURLOPT_URL => $this->getUrl($url, $payload),
-            );
-        }
-
-        $curlOptions += array(
-            CURLOPT_HEADER         => false,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_USERAGENT      => 'WebshopappApiClient/' . self::CLIENT_VERSION . ' (PHP/' . phpversion() . ')',
-        );
-
-        $curlHandle = curl_init();
-
-        curl_setopt_array($curlHandle, $curlOptions);
-
-        $responseBody = curl_exec($curlHandle);
-
-        if (curl_errno($curlHandle))
-        {
-            $this->handleCurlError($curlHandle);
-        }
-
-        $responseBody = json_decode($responseBody, true);
-        $responseCode = curl_getinfo($curlHandle, CURLINFO_HTTP_CODE);
-
-        curl_close($curlHandle);
-
-        $this->apiCallsMade ++;
-
-        if ($responseCode < 200 || $responseCode > 299 || ($responseBody && array_key_exists('error', $responseBody)))
-        {
-            $this->handleResponseError($responseCode, $responseBody);
-        }
-
-        if ($responseBody && preg_match('/^checkout/i', $url) !== 1)
-        {
-            $responseBody = array_shift($responseBody);
-        }
-
-        return $responseBody;
     }
 
     /**
-     * @param int   $responseCode
-     * @param array $responseBody
+     * @param ResponseInterface   $response
      *
      * @throws WebshopappApiException
      */
-    private function handleResponseError($responseCode, $responseBody)
+    private function handleResponseError(ResponseInterface $response)
     {
-        $errorMessage = 'Unknown error: ' . $responseCode;
+        $errorMessage = 'Unknown error: ' . $response->getStatusCode();
 
+        $responseBody = json_decode($response->getBody(), true);
         if ($responseBody && array_key_exists('error', $responseBody))
         {
             $errorMessage = $responseBody['error']['message'];
         }
 
-        throw new WebshopappApiException($errorMessage, $responseCode);
+        if ($response->getStatusCode() == 429) {
+            $this->handleRateLimitExceededException($errorMessage, $response);
+        }
+
+        throw new WebshopappApiException($errorMessage, $response->getStatusCode());
     }
 
     /**
-     * @param resource $curlHandle
+     * @param                   $errorMessage
+     * @param ResponseInterface $response
      *
      * @throws WebshopappApiException
+     * @throws WebshopappApiRateLimitExceededException
      */
-    private function handleCurlError($curlHandle)
+    private function handleRateLimitExceededException($errorMessage, ResponseInterface $response)
     {
-        $errorMessage = 'Curl error: ' . curl_error($curlHandle);
 
-        throw new WebshopappApiException($errorMessage, curl_errno($curlHandle));
+        do {
+            $rateLimit = $response->getHeader('X-RateLimit-Limit');
+            if (! $rateLimit) {
+                break;
+            }
+
+            $rateLimitRemaining = $response->getHeader('X-RateLimit-Remaining');
+            if (! $rateLimitRemaining) {
+                break;
+            }
+
+            $rateLimitReset = $response->getHeader('X-RateLimit-Reset');
+            if (! $rateLimitReset) {
+                break;
+            }
+
+            $rateLimit = $rateLimit[0];
+            list ($rateLimit5Min, $rateLimitHour, $rateLimitDay)
+                = explode('/', $rateLimit);
+
+            $rateLimitRemaining = $rateLimitRemaining[0];
+            list ($rateLimitRemaining5Min, $rateLimitRemainingHour, $rateLimitRemainingDay)
+                = explode('/', $rateLimitRemaining);
+
+            $rateLimitReset = $rateLimitReset[0];
+            list ($rateLimitReset5Min, $rateLimitResetHour, $rateLimitResetDay)
+                = explode('/', $rateLimitReset);
+
+
+            $exception = new WebshopappApiRateLimitExceededException(
+                $errorMessage,
+                $response->getStatusCode(),
+                new WebshopappApiRateLimit($rateLimit5Min, $rateLimitHour,  $rateLimitDay),
+                new WebshopappApiRateLimit($rateLimitRemaining5Min, $rateLimitRemainingHour,  $rateLimitRemainingDay),
+                new WebshopappApiRateLimit($rateLimitReset5Min, $rateLimitResetHour,  $rateLimitResetDay)
+            );
+
+            throw $exception;
+        } while (false);
+
+        throw new WebshopappApiException($errorMessage, $response->getStatusCode());
     }
 
     /**
@@ -879,6 +907,114 @@ class WebshopappApiClient
 
 class WebshopappApiException extends Exception
 {
+}
+
+class WebshopappApiRateLimit {
+    private $limit5Min = null;
+    private $limitHour = null;
+    private $limitDay  = null;
+
+    /**
+     * @param $limit5Min
+     * @param $limitHour
+     * @param $limitDay
+     */
+    public function __construct($limit5Min, $limitHour, $limitDay)
+    {
+        $this->limit5Min = $limit5Min;
+        $this->limitHour = $limitHour;
+        $this->limitDay  = $limitDay;
+    }
+
+    /**
+     * @return null
+     */
+    public function getLimit5Min()
+    {
+        return $this->limit5Min;
+    }
+
+    /**
+     * @return null
+     */
+    public function getLimitHour()
+    {
+        return $this->limitHour;
+    }
+
+    /**
+     * @return null
+     */
+    public function getLimitDay()
+    {
+        return $this->limitDay;
+    }
+}
+
+class WebshopappApiRateLimitExceededException extends WebshopappApiException
+{
+    /**
+     * @var WebshopappApiRateLimit
+     */
+    protected $rateLimit;
+
+    /**
+     * @var WebshopappApiRateLimit
+     */
+    protected $remainingRateLimit;
+
+    /**
+     * @var WebshopappApiRateLimit
+     */
+    protected $rateLimitReset;
+
+    /**
+     * WebshopappApiRateLimitExceededException constructor.
+     *
+     * @param string                 $message
+     * @param int                    $code
+     * @param WebshopappApiRateLimit $rateLimit
+     * @param WebshopappApiRateLimit $remainingRateLimit
+     * @param WebshopappApiRateLimit $rateLimitReset
+     * @param null                   $previous
+     */
+    public function __construct($message, $code,
+        WebshopappApiRateLimit $rateLimit,
+        WebshopappApiRateLimit $remainingRateLimit,
+        WebshopappApiRateLimit $rateLimitReset,
+        $previous = null
+    )
+    {
+        parent::__construct($message, $code, $previous);
+
+        $this->rateLimit = $rateLimit;
+        $this->remainingRateLimit = $remainingRateLimit;
+        $this->rateLimitReset = $rateLimitReset;
+    }
+
+    /**
+     * @return WebshopappApiRateLimit
+     */
+    public function getRateLimit()
+    {
+        return $this->rateLimit;
+    }
+
+    /**
+     * @return WebshopappApiRateLimit
+     */
+    public function getRemainingRateLimit()
+    {
+        return $this->remainingRateLimit;
+    }
+
+    /**
+     * @return WebshopappApiRateLimit
+     */
+    public function getRateLimitReset()
+    {
+        return $this->rateLimitReset;
+    }
 }
 
 class WebshopappApiResourceAccount
@@ -6882,7 +7018,7 @@ class WebshopappApiResourceWebhooks
     {
         return $this->client->read('webhooks/count', $params);
     }
-    
+
     /**
      * @param int $webhookId
      * @param array $fields
