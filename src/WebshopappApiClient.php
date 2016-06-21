@@ -6194,7 +6194,7 @@ class WebshopappApiResourceThemeProducts
      */
     public function create($fields)
     {
-        $fields = array('themeProducts' => $fields);
+        $fields = array('themeProduct' => $fields);
 
         return $this->client->create('theme/products', $fields);
     }
