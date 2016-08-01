@@ -5982,6 +5982,30 @@ class WebshopappApiResourceTaxes
     }
 
     /**
+     * @param array $fields
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function create($fields)
+    {
+        $fields = array('tax' => $fields);
+
+        return $this->client->create('taxes', $fields);
+    }
+
+    /**
+     * @param int $taxId
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function delete($taxId)
+    {
+        return $this->client->delete('taxes/' . $taxId);
+    }
+
+    /**
      * @param int $taxId
      * @param array $params
      *
