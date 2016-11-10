@@ -8,7 +8,7 @@ class WebshopappApiClient
     /**
      * The Api Client version (do not change!)
      */
-    const CLIENT_VERSION = '1.7.0';
+    const CLIENT_VERSION = '1.8.0';
     /**
      * The Api Hosts (do not change!)
      */
@@ -55,10 +55,6 @@ class WebshopappApiClient
      * @var WebshopappApiResourceAccountRatelimit
      */
     public $accountRatelimit;
-    /**
-     * @var WebshopappApiResourceAccountRequests
-     */
-    public $accountRequests;
     /**
      * @var WebshopappApiResourceAdditionalcosts
      */
@@ -160,6 +156,10 @@ class WebshopappApiClient
      */
     public $customersMetafields;
     /**
+     * @var WebshopappApiResourceCustomersTokens
+     */
+    public $customersTokens;
+    /**
      * @var WebshopappApiResourceDashboard
      */
     public $dashboard;
@@ -167,6 +167,10 @@ class WebshopappApiClient
      * @var WebshopappApiResourceDeliverydates
      */
     public $deliverydates;
+    /**
+     * @var WebshopappApiResourceDiscount_rules
+     */
+    public $discount_rules;
     /**
      * @var WebshopappApiResourceDiscounts
      */
@@ -384,6 +388,10 @@ class WebshopappApiClient
      */
     public $taxes;
     /**
+     * @var WebshopappApiResourceTaxesOverrides
+     */
+    public $taxesOverrides;
+    /**
      * @var WebshopappApiResourceTextpages
      */
     public $textpages;
@@ -556,7 +564,6 @@ class WebshopappApiClient
         $this->accountMetafields         = new WebshopappApiResourceAccountMetafields($this);
         $this->accountPermissions        = new WebshopappApiResourceAccountPermissions($this);
         $this->accountRatelimit          = new WebshopappApiResourceAccountRatelimit($this);
-        $this->accountRequests           = new WebshopappApiResourceAccountRequests($this);
         $this->additionalcosts           = new WebshopappApiResourceAdditionalcosts($this);
         $this->attributes                = new WebshopappApiResourceAttributes($this);
         $this->blogs                     = new WebshopappApiResourceBlogs($this);
@@ -582,8 +589,10 @@ class WebshopappApiClient
         $this->customers                 = new WebshopappApiResourceCustomers($this);
         $this->customersLogin            = new WebshopappApiResourceCustomersLogin($this);
         $this->customersMetafields       = new WebshopappApiResourceCustomersMetafields($this);
+        $this->customersTokens           = new WebshopappApiResourceCustomersTokens($this);
         $this->dashboard                 = new WebshopappApiResourceDashboard($this);
         $this->deliverydates             = new WebshopappApiResourceDeliverydates($this);
+        $this->discount_rules            = new WebshopappApiResourceDiscount_rules($this);
         $this->discounts                 = new WebshopappApiResourceDiscounts($this);
         $this->events                    = new WebshopappApiResourceEvents($this);
         $this->external_services         = new WebshopappApiResourceExternal_services($this);
@@ -638,6 +647,7 @@ class WebshopappApiClient
         $this->tags                      = new WebshopappApiResourceTags($this);
         $this->tagsProducts              = new WebshopappApiResourceTagsProducts($this);
         $this->taxes                     = new WebshopappApiResourceTaxes($this);
+        $this->taxesOverrides            = new WebshopappApiResourceTaxesOverrides($this);
         $this->textpages                 = new WebshopappApiResourceTextpages($this);
         $this->themeCategories           = new WebshopappApiResourceThemeCategories($this);
         $this->themeProducts             = new WebshopappApiResourceThemeProducts($this);
@@ -987,49 +997,6 @@ class WebshopappApiResourceAccountRatelimit
     public function get()
     {
         return $this->client->read('account/ratelimit');
-    }
-}
-
-class WebshopappApiResourceAccountRequests
-{
-    /**
-     * @var WebshopappApiClient
-     */
-    private $client;
-
-    public function __construct(WebshopappApiClient $client)
-    {
-        $this->client = $client;
-    }
-
-    /**
-     * @param int $requestId
-     * @param array $params
-     *
-     * @return array
-     * @throws WebshopappApiException
-     */
-    public function get($requestId = null, $params = array())
-    {
-        if (!$requestId)
-        {
-            return $this->client->read('account/requests', $params);
-        }
-        else
-        {
-            return $this->client->read('account/requests/' . $requestId, $params);
-        }
-    }
-
-    /**
-     * @param array $params
-     *
-     * @return int
-     * @throws WebshopappApiException
-     */
-    public function count($params = array())
-    {
-        return $this->client->read('account/requests/count', $params);
     }
 }
 
@@ -2528,6 +2495,33 @@ class WebshopappApiResourceCustomersMetafields
     }
 }
 
+class WebshopappApiResourceCustomersTokens
+{
+    /**
+     * @var WebshopappApiClient
+     */
+    private $client;
+
+    public function __construct(WebshopappApiClient $client)
+    {
+        $this->client = $client;
+    }
+
+    /**
+     * @param int $customerId
+     * @param array $fields
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function create($customerId, $fields)
+    {
+        $fields = array('customerToken' => $fields);
+
+        return $this->client->create('customers/' . $customerId . '/tokens', $fields);
+    }
+}
+
 class WebshopappApiResourceDashboard
 {
     /**
@@ -2630,6 +2624,87 @@ class WebshopappApiResourceDeliverydates
     public function delete($deliverydateId)
     {
         return $this->client->delete('deliverydates/' . $deliverydateId);
+    }
+}
+
+class WebshopappApiResourceDiscount_rules
+{
+    /**
+     * @var WebshopappApiClient
+     */
+    private $client;
+
+    public function __construct(WebshopappApiClient $client)
+    {
+        $this->client = $client;
+    }
+
+    /**
+     * @param array $fields
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function create($fields)
+    {
+        $fields = array('discountrules' => $fields);
+
+        return $this->client->create('discount_rules', $fields);
+    }
+
+    /**
+     * @param int $discountruleId
+     * @param array $params
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function get($discountruleId = null, $params = array())
+    {
+        if (!$discountruleId)
+        {
+            return $this->client->read('discount_rules', $params);
+        }
+        else
+        {
+            return $this->client->read('discount_rules/' . $discountruleId, $params);
+        }
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return int
+     * @throws WebshopappApiException
+     */
+    public function count($params = array())
+    {
+        return $this->client->read('discount_rules/count', $params);
+    }
+
+    /**
+     * @param int $discountruleId
+     * @param array $fields
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function update($discountruleId, $fields)
+    {
+        $fields = array('discountrules' => $fields);
+
+        return $this->client->update('discount_rules/' . $discountruleId, $fields);
+    }
+
+    /**
+     * @param int $discountruleId
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function delete($discountruleId)
+    {
+        return $this->client->delete('discount_rules/' . $discountruleId);
     }
 }
 
@@ -3621,7 +3696,7 @@ class WebshopappApiResourceOrdersCredit
      */
     public function create($orderId, $fields)
     {
-        $fields = array('creditInvoice' => $fields);
+        $fields = array('credit' => $fields);
 
         return $this->client->create('orders/' . $orderId . '/credit', $fields);
     }
@@ -6010,6 +6085,117 @@ class WebshopappApiResourceTaxes
     {
         return $this->client->read('taxes/count', $params);
     }
+
+    /**
+     * @param int $taxId
+     * @param array $fields
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function update($taxId, $fields)
+    {
+        $fields = array('tax' => $fields);
+
+        return $this->client->update('taxes/' . $taxId, $fields);
+    }
+
+    /**
+     * @param int $taxId
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function delete($taxId)
+    {
+        return $this->client->delete('taxes/' . $taxId);
+    }
+}
+
+class WebshopappApiResourceTaxesOverrides
+{
+    /**
+     * @var WebshopappApiClient
+     */
+    private $client;
+
+    public function __construct(WebshopappApiClient $client)
+    {
+        $this->client = $client;
+    }
+
+    /**
+     * @param int $taxId
+     * @param array $fields
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function create($taxId, $fields)
+    {
+        $fields = array('taxOverride' => $fields);
+
+        return $this->client->create('taxes/' . $taxId . '/overrides', $fields);
+    }
+
+    /**
+     * @param int $taxId
+     * @param int $taxOverrideId
+     * @param array $params
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function get($taxId, $taxOverrideId = null, $params = array())
+    {
+        if (!$taxOverrideId)
+        {
+            return $this->client->read('taxes/' . $taxId . '/overrides', $params);
+        }
+        else
+        {
+            return $this->client->read('taxes/' . $taxId . '/overrides/' . $taxOverrideId, $params);
+        }
+    }
+
+    /**
+     * @param int $taxId
+     * @param array $params
+     *
+     * @return int
+     * @throws WebshopappApiException
+     */
+    public function count($taxId, $params = array())
+    {
+        return $this->client->read('taxes/' . $taxId . '/overrides/count', $params);
+    }
+
+    /**
+     * @param int $taxId
+     * @param int $taxOverrideId
+     * @param array $fields
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function update($taxId, $taxOverrideId, $fields)
+    {
+        $fields = array('taxOverride' => $fields);
+
+        return $this->client->update('taxes/' . $taxId . '/overrides/' . $taxOverrideId, $fields);
+    }
+
+    /**
+     * @param int $taxId
+     * @param int $taxOverrideId
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function delete($taxId, $taxOverrideId)
+    {
+        return $this->client->delete('taxes/' . $taxId . '/overrides/' . $taxOverrideId);
+    }
 }
 
 class WebshopappApiResourceTextpages
@@ -6194,7 +6380,7 @@ class WebshopappApiResourceThemeProducts
      */
     public function create($fields)
     {
-        $fields = array('themeProducts' => $fields);
+        $fields = array('themeProduct' => $fields);
 
         return $this->client->create('theme/products', $fields);
     }
@@ -6882,7 +7068,7 @@ class WebshopappApiResourceWebhooks
     {
         return $this->client->read('webhooks/count', $params);
     }
-    
+
     /**
      * @param int $webhookId
      * @param array $fields
@@ -6893,6 +7079,7 @@ class WebshopappApiResourceWebhooks
     public function update($webhookId, $fields)
     {
         $fields = array('webhook' => $fields);
+
         return $this->client->update('webhooks/' . $webhookId, $fields);
     }
 
