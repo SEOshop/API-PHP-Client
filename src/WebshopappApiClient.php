@@ -12,7 +12,7 @@ class WebshopappApiClient
     /**
      * The Api Hosts (do not change!)
      */
-    const SERVER_HOST_LOCAL = 'https://api.webstoreapp.com/';
+    const SERVER_HOST_LOCAL = 'https://api.webshopapp.dev/';
     const SERVER_HOST_TEST  = 'https://api.webshopapp.net/';
     const SERVER_HOST_LIVE  = 'https://api.webshopapp.com/';
     const SERVER_EU1_LIVE   = 'https://api.webshopapp.com/';
