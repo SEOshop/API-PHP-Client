@@ -8,7 +8,7 @@ class WebshopappApiClient
     /**
      * The Api Client version (do not change!)
      */
-    const CLIENT_VERSION = '1.8.0';
+    const CLIENT_VERSION = '2.0.0';
     /**
      * The Api Hosts (do not change!)
      */
