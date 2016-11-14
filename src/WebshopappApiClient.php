@@ -156,10 +156,6 @@ class WebshopappApiClient
      */
     public $customersMetafields;
     /**
-     * @var WebshopappApiResourceCustomersTokens
-     */
-    public $customersTokens;
-    /**
      * @var WebshopappApiResourceDashboard
      */
     public $dashboard;
@@ -168,9 +164,9 @@ class WebshopappApiClient
      */
     public $deliverydates;
     /**
-     * @var WebshopappApiResourceDiscount_rules
+     * @var WebshopappApiResourceDiscountrules
      */
-    public $discount_rules;
+    public $discountrules;
     /**
      * @var WebshopappApiResourceDiscounts
      */
@@ -589,10 +585,9 @@ class WebshopappApiClient
         $this->customers                 = new WebshopappApiResourceCustomers($this);
         $this->customersLogin            = new WebshopappApiResourceCustomersLogin($this);
         $this->customersMetafields       = new WebshopappApiResourceCustomersMetafields($this);
-        $this->customersTokens           = new WebshopappApiResourceCustomersTokens($this);
         $this->dashboard                 = new WebshopappApiResourceDashboard($this);
         $this->deliverydates             = new WebshopappApiResourceDeliverydates($this);
-        $this->discount_rules            = new WebshopappApiResourceDiscount_rules($this);
+        $this->discountrules             = new WebshopappApiResourceDiscountrules($this);
         $this->discounts                 = new WebshopappApiResourceDiscounts($this);
         $this->events                    = new WebshopappApiResourceEvents($this);
         $this->external_services         = new WebshopappApiResourceExternal_services($this);
@@ -2495,33 +2490,6 @@ class WebshopappApiResourceCustomersMetafields
     }
 }
 
-class WebshopappApiResourceCustomersTokens
-{
-    /**
-     * @var WebshopappApiClient
-     */
-    private $client;
-
-    public function __construct(WebshopappApiClient $client)
-    {
-        $this->client = $client;
-    }
-
-    /**
-     * @param int $customerId
-     * @param array $fields
-     *
-     * @return array
-     * @throws WebshopappApiException
-     */
-    public function create($customerId, $fields)
-    {
-        $fields = array('customerToken' => $fields);
-
-        return $this->client->create('customers/' . $customerId . '/tokens', $fields);
-    }
-}
-
 class WebshopappApiResourceDashboard
 {
     /**
@@ -2627,7 +2595,7 @@ class WebshopappApiResourceDeliverydates
     }
 }
 
-class WebshopappApiResourceDiscount_rules
+class WebshopappApiResourceDiscountrules
 {
     /**
      * @var WebshopappApiClient
@@ -2647,9 +2615,9 @@ class WebshopappApiResourceDiscount_rules
      */
     public function create($fields)
     {
-        $fields = array('discountrules' => $fields);
+        $fields = array('discountRule' => $fields);
 
-        return $this->client->create('discount_rules', $fields);
+        return $this->client->create('discountrules', $fields);
     }
 
     /**
@@ -2663,11 +2631,11 @@ class WebshopappApiResourceDiscount_rules
     {
         if (!$discountruleId)
         {
-            return $this->client->read('discount_rules', $params);
+            return $this->client->read('discountrules', $params);
         }
         else
         {
-            return $this->client->read('discount_rules/' . $discountruleId, $params);
+            return $this->client->read('discountrules/' . $discountruleId, $params);
         }
     }
 
@@ -2679,7 +2647,7 @@ class WebshopappApiResourceDiscount_rules
      */
     public function count($params = array())
     {
-        return $this->client->read('discount_rules/count', $params);
+        return $this->client->read('discountrules/count', $params);
     }
 
     /**
@@ -2691,9 +2659,9 @@ class WebshopappApiResourceDiscount_rules
      */
     public function update($discountruleId, $fields)
     {
-        $fields = array('discountrules' => $fields);
+        $fields = array('discountRule' => $fields);
 
-        return $this->client->update('discount_rules/' . $discountruleId, $fields);
+        return $this->client->update('discountrules/' . $discountruleId, $fields);
     }
 
     /**
@@ -2704,7 +2672,7 @@ class WebshopappApiResourceDiscount_rules
      */
     public function delete($discountruleId)
     {
-        return $this->client->delete('discount_rules/' . $discountruleId);
+        return $this->client->delete('discountrules/' . $discountruleId);
     }
 }
 
