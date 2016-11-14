@@ -1,11 +1,11 @@
-![SEOshop](http://www.getseoshop.com/assets/gfx/seoshop-logo.min.png)
+![Lightspeed eCom](http://developers.seoshop.com/assets/gfx/logo.png)
 
 [![Latest Stable Version](http://img.shields.io/packagist/v/seoshop/seoshop-php.svg)](https://packagist.org/packages/seoshop/seoshop-php)
 [![Latest Unstable Version](http://img.shields.io/packagist/vpre/seoshop/seoshop-php.svg)](https://packagist.org/packages/seoshop/seoshop-php)
 ![License](http://img.shields.io/badge/license-MIT-green.svg)
 
-# SEOshop PHP API client
-This package is a convenience wrapper to communicate with the SEOshop REST-API.
+# Lightspeed eCom PHP API client
+This package is a convenience wrapper to communicate with the Lightspeed eCom REST-API.
 
 ## Installation
 For the installation of the client, there are 2 ways. The composer way is preferable, but not always possible.
@@ -30,7 +30,7 @@ require 'vendor/autoload.php';
 ```
 
 ### Manual
-Obtain the latest version of the SEOshop PHP API client
+Obtain the latest version of the Lightspeed eCom PHP API client
 ``` bash
 git clone https://github.com/SEOshop/API-PHP-Client
 ```
