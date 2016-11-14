@@ -67,14 +67,14 @@ The API secret you've received or created
 Language shortcode that's available in the shop you're connecting to
 
 ## Getting started
-SEOshop offers a powerful set of API’s for developers to create awesome apps. The API provides developers the interface to connect with third party software such as accounting-, feedback-, e-mailmarketing- and inventory management-software, or extend with new features that interact with our core platform, such as loyalty programs, social-sharing programs or reporting tools.
+Lightspeed eCom offers a powerful set of API’s for developers to create awesome apps. The API provides developers the interface to connect with third party software such as accounting-, feedback-, e-mailmarketing- and inventory management-software, or extend with new features that interact with our core platform, such as loyalty programs, social-sharing programs or reporting tools.
 
-Getting started with SEOshop is easy. Not a partner yet? [Please sign up as a partner](http://www.getseoshop.com/partners/partner-signup/) and claim your account details and API keys.
+Getting started with Lightspeed eCom is easy. Not a partner yet? [Please sign up as a partner](https://www.lightspeedhq.com/partners/) and claim your account details and API keys.
 
-Read our tutorials on how to [build](http://developers.seoshop.com/api/tutorials/build-an-app) and [publish](http://developers.seoshop.com/api/tutorials/publish-an-app) your first app. Check our [getting started guides](http://developers.seoshop.com/api/getting-started) to find out how to use the API
+Read our tutorials on how to [build](http://developers.lightspeedhq.com/ecom/tutorials/build-an-app/) and [publish](http://developers.lightspeedhq.com/ecom/tutorials/publish-an-app/) your first app. Check our [introduction](http://developers.lightspeedhq.com/ecom/introduction/introduction/) to find out how to use the API
 
 ## Documentation
-More documentation can be found at [developers.seoshop.com/api](http://developers.seoshop.com/api)
+More documentation can be found at [developers.lightspeedhq.com/ecom](http://developers.lightspeedhq.com/ecom)
 
 ## Contributing
 We love contributions, but please note that the API client is generated. If you have suggested changes, you may still create a PR, but your PR will not be merged. We will however adapt the generator to reflect your changes. You can also create a GitHub issue if there's something you miss.
