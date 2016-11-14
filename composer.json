@@ -1,12 +1,12 @@
 {
     "name": "seoshop/seoshop-php",
-    "description": "PHP client for the SEOshop API",
-    "keywords": ["api", "client", "php"],
-    "homepage": "http://developers.seoshop.com",
+    "description": "PHP client for the Lightspeed eCom API",
+    "keywords": ["api", "client", "php", "ecom", "lightspeed"],
+    "homepage": "http://http://developers.lightspeedhq.com/ecom",
     "license": "MIT",
     "authors": [
         {
-            "name": "SEOshop and contributors",
+            "name": "Lightspeed and contributors",
             "homepage": "https://github.com/SEOshop/API-PHP-Client/contributors"
         }
     ],
