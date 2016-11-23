@@ -8,7 +8,7 @@ class WebshopappApiClient
     /**
      * The Api Client version (do not change!)
      */
-    const CLIENT_VERSION = '2.0.0';
+    const CLIENT_VERSION = '1.8.0';
     /**
      * The Api Hosts (do not change!)
      */
@@ -771,6 +771,7 @@ class WebshopappApiClient
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_USERAGENT      => 'WebshopappApiClient/' . self::CLIENT_VERSION . ' (PHP/' . phpversion() . ')',
+            CURLOPT_SSLVERSION     => 6,
         );
 
         $curlHandle = curl_init();
