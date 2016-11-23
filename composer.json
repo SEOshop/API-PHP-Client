@@ -2,7 +2,7 @@
     "name": "seoshop/seoshop-php",
     "description": "PHP client for the Lightspeed eCom API",
     "keywords": ["api", "client", "php", "ecom", "lightspeed"],
-    "homepage": "http://http://developers.lightspeedhq.com/ecom",
+    "homepage": "http://developers.lightspeedhq.com/ecom",
     "license": "MIT",
     "authors": [
         {
