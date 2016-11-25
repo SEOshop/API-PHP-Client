@@ -2177,13 +2177,14 @@ class WebshopappApiResourceCheckoutsShipment_methods
 
     /**
      * @param int $checkoutId
+     * @param array $params
      *
      * @return array
      * @throws WebshopappApiException
      */
-    public function get($checkoutId)
+    public function get($checkoutId, $params = array())
     {
-        return $this->client->read('checkouts/' . $checkoutId . '/shipment_methods');
+        return $this->client->read('checkouts/' . $checkoutId . '/shipment_methods', $params);
     }
 }
 
@@ -6023,6 +6024,19 @@ class WebshopappApiResourceTaxes
     public function __construct(WebshopappApiClient $client)
     {
         $this->client = $client;
+    }
+
+    /**
+     * @param array $fields
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function create($fields)
+    {
+        $fields = array('tax' => $fields);
+
+        return $this->client->create('taxes', $fields);
     }
 
     /**
