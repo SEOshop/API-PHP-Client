@@ -156,6 +156,10 @@ class WebshopappApiClient
      */
     public $customersMetafields;
     /**
+     * @var WebshopappApiResourceCustomersTokens
+     */
+    public $customersTokens;
+    /**
      * @var WebshopappApiResourceDashboard
      */
     public $dashboard;
@@ -585,6 +589,7 @@ class WebshopappApiClient
         $this->customers                 = new WebshopappApiResourceCustomers($this);
         $this->customersLogin            = new WebshopappApiResourceCustomersLogin($this);
         $this->customersMetafields       = new WebshopappApiResourceCustomersMetafields($this);
+        $this->customersTokens           = new WebshopappApiResourceCustomersTokens($this);
         $this->dashboard                 = new WebshopappApiResourceDashboard($this);
         $this->deliverydates             = new WebshopappApiResourceDeliverydates($this);
         $this->discountrules             = new WebshopappApiResourceDiscountrules($this);
@@ -2489,6 +2494,33 @@ class WebshopappApiResourceCustomersMetafields
     public function delete($customerId, $metafieldId)
     {
         return $this->client->delete('customers/' . $customerId . '/metafields/' . $metafieldId);
+    }
+}
+
+class WebshopappApiResourceCustomersTokens
+{
+    /**
+     * @var WebshopappApiClient
+     */
+    private $client;
+
+    public function __construct(WebshopappApiClient $client)
+    {
+        $this->client = $client;
+    }
+
+    /**
+     * @param int $customerId
+     * @param array $fields
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function create($customerId, $fields)
+    {
+        $fields = array('customerToken' => $fields);
+
+        return $this->client->create('customers/' . $customerId . '/tokens', $fields);
     }
 }
 
