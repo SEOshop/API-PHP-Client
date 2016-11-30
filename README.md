@@ -80,4 +80,7 @@ More documentation can be found at [developers.lightspeedhq.com/ecom](http://dev
 We love contributions, but please note that the API client is generated. If you have suggested changes, you may still create a PR, but your PR will not be merged. We will however adapt the generator to reflect your changes. You can also create a GitHub issue if there's something you miss.
 
 ## Unofficial clients for other languages
-- **Ruby client** [SEOshop API client for Ruby (by Yotpo)](https://github.com/YotpoLtd/seoshop-api)
+- **PHP**
+    - [laravel-lightspeed-api](https://github.com/gunharth/laravel-lightspeed-api) by [Gunharth Randolf @gunharth](https://github.com/gunharth)
+- **Ruby** 
+    - [seoshop-api](https://github.com/YotpoLtd/seoshop-api) by [Yotpo Ltd @YotpoLtd](https://github.com/YotpoLtd)
