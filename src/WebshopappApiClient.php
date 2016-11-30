@@ -4610,7 +4610,7 @@ class WebshopappApiResourceQuotesPaymentmethods
      * @return int
      * @throws WebshopappApiException
      */
-    public function count($params = array())
+    public function count($quoteId, $params = array())
     {
         return $this->client->read('quotes/' . $quoteId . '/paymentmethods/count', $params);
     }
