@@ -747,7 +747,7 @@ class WebshopappApiClient
         {
             if (!$payload || !is_array($payload))
             {
-                throw new WebshopAppApiException(100, 'Invalid payload');
+                throw new WebshopAppApiException('Invalid payload', 100);
             }
 
             $curlOptions = array(
