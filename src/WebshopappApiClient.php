@@ -4832,6 +4832,19 @@ class WebshopappApiResourceReturns
     }
 
     /**
+     * @param array $fields
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function create($fields)
+    {
+        $fields = array('returns' => $fields);
+
+        return $this->client->create('returns', $fields);
+    }
+
+    /**
      * @param int $returnId
      * @param array $params
      *
