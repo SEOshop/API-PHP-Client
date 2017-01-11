@@ -84,3 +84,5 @@ We love contributions, but please note that the API client is generated. If you 
     - [laravel-lightspeed-api](https://github.com/gunharth/laravel-lightspeed-api) by [Gunharth Randolf @gunharth](https://github.com/gunharth)
 - **Ruby** 
     - [seoshop-api](https://github.com/YotpoLtd/seoshop-api) by [Yotpo Ltd @YotpoLtd](https://github.com/YotpoLtd)
+- **Java**
+    - [lightspeedecom-api](https://github.com/Falkplan/lightspeedecom-api) by [Falkplan](https://github.com/Falkplan)
