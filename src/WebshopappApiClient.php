@@ -2050,13 +2050,13 @@ class WebshopappApiResourceCheckoutsOrder
     }
 
     /**
-     * @param int $checkoutId
+     * @param int   $checkoutId
      * @param array $fields
      *
      * @return array
      * @throws WebshopappApiException
      */
-    public function create($checkoutId, $fields)
+    public function create($checkoutId, $fields = [])
     {
         return $this->client->create('checkouts/' . $checkoutId . '/order', $fields);
     }
