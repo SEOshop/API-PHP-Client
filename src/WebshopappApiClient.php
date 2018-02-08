@@ -38,7 +38,11 @@ class WebshopappApiClient
      * @var int
      */
     private $apiCallsMade = 0;
-
+    /**
+     * @var array
+     */
+    private $responseHeaders = null;
+    
     /**
      * @var WebshopappApiResourceAccount
      */
@@ -542,7 +546,15 @@ class WebshopappApiClient
     {
         return $this->apiCallsMade;
     }
-
+    
+    /**
+     * @return array
+     */
+    public function getResponseHeaders()
+    {
+        return $this->responseHeaders;
+    }
+    
     /**
      * @throws WebshopappApiException
      */
@@ -772,7 +784,7 @@ class WebshopappApiClient
         }
 
         $curlOptions += array(
-            CURLOPT_HEADER         => false,
+            CURLOPT_HEADER         => true,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_USERAGENT      => 'WebshopappApiClient/' . self::CLIENT_VERSION . ' (PHP/' . phpversion() . ')',
@@ -784,6 +796,28 @@ class WebshopappApiClient
         curl_setopt_array($curlHandle, $curlOptions);
 
         $responseBody = curl_exec($curlHandle);
+        
+        $responseHeaderSize		= curl_getinfo($curlHandle, CURLINFO_HEADER_SIZE);
+		$responseHeaderStr		= substr($responseBody, 0, $responseHeaderSize);
+    	
+    	$this->responseHeaders = [];
+
+	    foreach (explode("\r\n", $responseHeaderStr) as $i => $line){
+	        if ($i === 0)
+			{
+	            $this->responseHeaders['http_code'] = $line;
+	        }
+	        else
+	        {
+	            list ($key, $value) = explode(': ', $line);
+	            if($key)
+	            {
+	            	$this->responseHeaders[$key] = $value;
+	            }
+	        }
+		}
+		
+        $responseBody = substr($responseBody, $responseHeaderSize);
 
         if (curl_errno($curlHandle))
         {
