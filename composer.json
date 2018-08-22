@@ -1,5 +1,5 @@
 {
-    "name": "seoshop/seoshop-php",
+    "name": "keendelivery/lightspeed",
     "description": "PHP client for the Lightspeed eCom API",
     "keywords": ["api", "client", "php", "ecom", "lightspeed"],
     "homepage": "http://developers.lightspeedhq.com/ecom",
@@ -17,6 +17,6 @@
         "ext-mbstring": "*"
     },
     "autoload": {
-        "files": ["src/WebshopappApiClient.php"]
+        "psr-4": {"Lightspeed\\": "src/"}
     }
 }
