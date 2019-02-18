@@ -11,11 +11,13 @@ This package is a convenience wrapper to communicate with the Lightspeed eCom RE
 For the installation of the client, there are 2 ways. The composer way is preferable, but not always possible.
 
 ### Composer
+**Note: From client version 1.9.0 and upward, we will only support PHP 5.4 and above.**
+
 Include the package in your `composer.json` file
 ``` json
 {
     "require": {
-        "seoshop/seoshop-php": "^1.8"
+        "seoshop/seoshop-php": "^1.9"
     }
 }
 ```
@@ -65,6 +67,14 @@ The API secret you've received or created
 
 [language]
 Language shortcode that's available in the shop you're connecting to
+
+## Fetching response headers
+After making a call, you can fetch the response headers from our API server and use it to check important data such as rate limiting.
+
+``` php
+$shopInfo = $client->shop->get();
+$response = $shopInfo->getResponseHeaders();
+```
 
 ## Getting started
 Lightspeed eCom offers a powerful set of API’s for developers to create awesome apps. The API provides developers the interface to connect with third party software such as accounting-, feedback-, e-mailmarketing- and inventory management-software, or extend with new features that interact with our core platform, such as loyalty programs, social-sharing programs or reporting tools.
