@@ -39,7 +39,7 @@ git clone https://github.com/SEOshop/API-PHP-Client
 
 And include the class in your project
 ``` php
-require_once '/path/to/ApiClient.php';
+require_once '/path/to/lightspeed-php-sdk/src/ApiClient.php';
 ```
 
 ## Usage
@@ -49,7 +49,7 @@ There are a lot of API resources that are accessible through this client. You ca
 <?php
 require 'vendor/autoload.php';
 
-$client = new ApiClient('[api-server]', '[api-key]', '[api-secret]', '[language]');
+$client = new \Lightspeed\ApiClient('[api-server]', '[api-key]', '[api-secret]', '[language]');
 
 $shopInfo = $client->shop->get();
 ```

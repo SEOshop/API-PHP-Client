@@ -3,7 +3,7 @@
 namespace Lightspeed;
 
 /**
- * The Webshopapp Api Client Class
+ * The Lightspeed Api Client Class
  */
 class ApiClient
 {
