@@ -18,6 +18,6 @@
         "ext-fileinfo": "*"
     },
     "autoload": {
-        "files": ["src/WebshopappApiClient.php"]
+        "files": ["src/*.php"]
     }
 }
