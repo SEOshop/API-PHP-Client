@@ -1,6 +1,6 @@
 {
-    "name": "seoshop/seoshop-php",
-    "description": "PHP client for the Lightspeed eCom API",
+    "name": "coddin-web/lightspeed-php-sdk",
+    "description": "An improved PHP client for the Lightspeed eCom API",
     "keywords": ["api", "client", "php", "ecom", "lightspeed"],
     "homepage": "http://developers.lightspeedhq.com/ecom",
     "license": "MIT",
@@ -8,10 +8,14 @@
         {
             "name": "Lightspeed and contributors",
             "homepage": "https://github.com/SEOshop/API-PHP-Client/contributors"
+        },
+        {
+            "name": "Coddin",
+            "homepage": "https://coddin.nl"
         }
     ],
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=7.3",
         "ext-curl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
