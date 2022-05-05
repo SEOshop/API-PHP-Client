@@ -18,6 +18,8 @@
         "ext-fileinfo": "*"
     },
     "autoload": {
-        "files": ["src/*.php"]
+        "psr-4": {
+            "Lightspeed\\": "src/"
+        }
     }
 }
