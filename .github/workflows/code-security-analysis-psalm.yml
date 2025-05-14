@@ -1,0 +1,11 @@
+name: Static Code Security Analysis (Psalm)
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  analyze:
+    uses: lightspeed-security/code-scanning-workflows/.github/workflows/psalm-php.yml@reusable-psalm-workflow
