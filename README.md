@@ -1,4 +1,4 @@
-![Lightspeed eCom](http://developers.seoshop.com/assets/gfx/logo.png)
+![Lightspeed eCom](https://developers.lightspeedhq.com/images/new_logo.png)
 
 [![Latest Stable Version](http://img.shields.io/packagist/v/seoshop/seoshop-php.svg)](https://packagist.org/packages/seoshop/seoshop-php)
 [![Latest Unstable Version](http://img.shields.io/packagist/vpre/seoshop/seoshop-php.svg)](https://packagist.org/packages/seoshop/seoshop-php)
@@ -7,14 +7,22 @@
 # Lightspeed eCom PHP API client
 This package is a convenience wrapper to communicate with the Lightspeed eCom REST-API.
 
+
+## Requirements
+To use the Lightspeed eCom PHP API client, the following things are required:
+
++ PHP >= 5.4
++ cURL, JSON, mbstring and FileInfo PHP extensions
+
+
 ## Installation
-For the installation of the client, there are 2 ways. The composer way is preferable, but not always possible.
 
-### Composer
-**Note: From client version 1.9.0 and upward, we will only support PHP 5.4 and above.**
+By far the easiest way to install the Lightspeed eCom PHP API client is to require it with [Composer](http://getcomposer.org/doc/00-intro.md).
 
-Include the package in your `composer.json` file
-``` json
+``` bash
+$ composer require seoshop/seoshop-php:^1.9
+```
+```json
 {
     "require": {
         "seoshop/seoshop-php": "^1.9"
@@ -22,16 +30,8 @@ Include the package in your `composer.json` file
 }
 ```
 
-...then run `composer update` and load the composer autoloader:
 
-``` php
-<?php
-require 'vendor/autoload.php';
-
-// ...
-```
-
-### Manual
+### Manual Installation
 Obtain the latest version of the Lightspeed eCom PHP API client
 ``` bash
 git clone https://github.com/SEOshop/API-PHP-Client
@@ -39,7 +39,7 @@ git clone https://github.com/SEOshop/API-PHP-Client
 
 And include the class in your project
 ``` php
-require_once '/path/to/WebshopappApiClient.php';
+require_once '/path/to/lightspeed-php-sdk/src/ApiClient.php';
 ```
 
 ## Usage
@@ -49,7 +49,7 @@ There are a lot of API resources that are accessible through this client. You ca
 <?php
 require 'vendor/autoload.php';
 
-$client = new WebshopappApiClient('[api-server]', '[api-key]', '[api-secret]', '[language]');
+$client = new \Lightspeed\ApiClient('[api-server]', '[api-key]', '[api-secret]', '[language]');
 
 $shopInfo = $client->shop->get();
 ```
