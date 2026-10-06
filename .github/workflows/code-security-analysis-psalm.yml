@@ -2,14 +2,23 @@ name: Static Code Security Analysis (Psalm)
 
 on:
   push:
-    branches: [ master, main ]
+    branches: [ master ]
   pull_request:
-    branches: [ master, main ]
+    branches: [ master ]
 
 jobs:
-  analyze:
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
-    uses: lightspeed-security/code-scanning-workflows/.github/workflows/psalm-php.yml@main
+  psalm:
+    name: Psalm
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+      - name: Psalm
+        uses: docker://ghcr.io/psalm/psalm-github-actions:6.10.3
+        with:
+          security_analysis: true
+          report_file: results.sarif
+      - name: Upload Security Analysis results to GitHub
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: results.sarif
