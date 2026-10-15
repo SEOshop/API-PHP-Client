@@ -8,7 +8,7 @@ class WebshopappApiClient
     /**
      * The Api Client version (do not change!)
      */
-    const CLIENT_VERSION = '1.9.1';
+    const CLIENT_VERSION = '1.10.0';
     /**
      * The Api Hosts (do not change!)
      */
@@ -183,10 +183,6 @@ class WebshopappApiClient
      */
     public $discounts;
     /**
-     * @var WebshopappApiResourceEvents
-     */
-    public $events;
-    /**
      * @var WebshopappApiResourceExternal_services
      */
     public $external_services;
@@ -287,13 +283,13 @@ class WebshopappApiClient
      */
     public $productsRelations;
     /**
+     * @var WebshopappApiResourceQuantity_discounts
+     */
+    public $quantity_discounts;
+    /**
      * @var WebshopappApiResourceQuotes
      */
     public $quotes;
-    /**
-     * @var WebshopappApiResourceQuotesConvert
-     */
-    public $quotesConvert;
     /**
      * @var WebshopappApiResourceQuotesPaymentmethods
      */
@@ -462,6 +458,10 @@ class WebshopappApiClient
      * @var WebshopappApiResourceWebhooks
      */
     public $webhooks;
+    /**
+     * @var WebshopappApiResourceWithdrawals
+     */
+    public $withdrawals;
 
     /**
      * @param string $apiKey      The api key
@@ -585,11 +585,11 @@ class WebshopappApiClient
      */
     private function checkLoginCredentials()
     {
-        if (strlen($this->getApiKey()) !== 32 || strlen($this->getApiSecret()) !== 32)
+        if (strlen((string) $this->getApiKey()) !== 32 || strlen((string) $this->getApiSecret()) !== 32)
         {
             throw new WebshopappApiException('Invalid login credentials.');
         }
-        if (strlen($this->getApiLanguage()) !== 2)
+        if (strlen((string) $this->getApiLanguage()) !== 2)
         {
             throw new WebshopappApiException('Invalid API language.');
         }
@@ -632,7 +632,6 @@ class WebshopappApiClient
         $this->deliverydates             = new WebshopappApiResourceDeliverydates($this);
         $this->discountrules             = new WebshopappApiResourceDiscountrules($this);
         $this->discounts                 = new WebshopappApiResourceDiscounts($this);
-        $this->events                    = new WebshopappApiResourceEvents($this);
         $this->external_services         = new WebshopappApiResourceExternal_services($this);
         $this->files                     = new WebshopappApiResourceFiles($this);
         $this->filters                   = new WebshopappApiResourceFilters($this);
@@ -658,8 +657,8 @@ class WebshopappApiClient
         $this->productsImages            = new WebshopappApiResourceProductsImages($this);
         $this->productsMetafields        = new WebshopappApiResourceProductsMetafields($this);
         $this->productsRelations         = new WebshopappApiResourceProductsRelations($this);
+        $this->quantity_discounts        = new WebshopappApiResourceQuantity_discounts($this);
         $this->quotes                    = new WebshopappApiResourceQuotes($this);
-        $this->quotesConvert             = new WebshopappApiResourceQuotesConvert($this);
         $this->quotesPaymentmethods      = new WebshopappApiResourceQuotesPaymentmethods($this);
         $this->quotesProducts            = new WebshopappApiResourceQuotesProducts($this);
         $this->quotesShippingmethods     = new WebshopappApiResourceQuotesShippingmethods($this);
@@ -702,6 +701,7 @@ class WebshopappApiClient
         $this->variantsBulk              = new WebshopappApiResourceVariantsBulk($this);
         $this->variantsMovements         = new WebshopappApiResourceVariantsMovements($this);
         $this->webhooks                  = new WebshopappApiResourceWebhooks($this);
+        $this->withdrawals               = new WebshopappApiResourceWithdrawals($this);
     }
 
     /**
@@ -709,6 +709,7 @@ class WebshopappApiClient
      * @param array  $params
      *
      * @return string
+     * @throws WebshopappApiException
      */
     private function getUrl($resourceUrl, $params = null)
     {
@@ -727,6 +728,10 @@ class WebshopappApiClient
         elseif ($this->apiServer == 'us1')
         {
             $apiHost = self::SERVER_US1_LIVE;
+        }
+        else
+        {
+            throw new WebshopappApiException('Invalid API server.');
         }
 
         $apiHostParts     = parse_url($apiHost);
@@ -751,7 +756,7 @@ class WebshopappApiClient
             {
                 if (!is_array($value))
                 {
-                    $queryParameters[] = $key . '=' . urlencode($value);
+                    $queryParameters[] = $key . '=' . urlencode((string) $value);
                 }
             }
 
@@ -784,7 +789,7 @@ class WebshopappApiClient
         {
             if (!$payload || !is_array($payload))
             {
-                throw new WebshopAppApiException(100, 'Invalid payload');
+                throw new WebshopappApiException('Invalid payload', 100);
             }
 
             $multipart = array_key_exists('header', $options);
@@ -859,14 +864,18 @@ class WebshopappApiClient
 
         $this->apiCallsMade ++;
 
-        if ($responseCode < 200 || $responseCode > 299 || ($responseBody && array_key_exists('error', $responseBody)))
+        // json_decode() may return a scalar. Only an array can carry an error or
+        // a root object. On PHP 8 the array functions throw a TypeError otherwise.
+        $isArrayBody = is_array($responseBody);
+
+        if ($responseCode < 200 || $responseCode > 299 || ($isArrayBody && array_key_exists('error', $responseBody)))
         {
             $this->handleResponseError($responseCode, $responseBody);
         }
 
         if ($responseBody && preg_match('/^checkout/i', $url) !== 1)
         {
-            $responseBody = array_shift($responseBody);
+            $responseBody = $isArrayBody ? array_shift($responseBody) : null;
         }
 
         return $responseBody;
@@ -874,7 +883,7 @@ class WebshopappApiClient
 
     /**
      * @param int   $responseCode
-     * @param array $responseBody
+     * @param mixed $responseBody
      *
      * @throws WebshopappApiException
      */
@@ -882,16 +891,25 @@ class WebshopappApiClient
     {
         $errorMessage = 'Unknown error: ' . $responseCode;
 
-        if ($responseBody && array_key_exists('error', $responseBody))
+        if (is_array($responseBody) && array_key_exists('error', $responseBody))
         {
-            $errorMessage = $responseBody['error']['message'];
+            $error = $responseBody['error'];
+
+            if (is_array($error) && isset($error['message']) && is_scalar($error['message']))
+            {
+                $errorMessage = (string) $error['message'];
+            }
+            elseif (is_string($error) && $error !== '')
+            {
+                $errorMessage = $error;
+            }
         }
 
         throw new WebshopappApiException($errorMessage, $responseCode);
     }
 
     /**
-     * @param resource $curlHandle
+     * @param resource|CurlHandle $curlHandle
      *
      * @throws WebshopappApiException
      */
@@ -1397,7 +1415,7 @@ class WebshopappApiResourceBlogsArticlesImage
      */
     public function create($articleId, $fields)
     {
-        if (strpos($fields['attachment'], 'http') === false) {
+        if (isset($fields['attachment']) && is_string($fields['attachment']) && $fields['attachment'] !== '' && strpos($fields['attachment'], 'http') === false) {
             try {
                 $attachment = $fields['attachment'];
 
@@ -1775,7 +1793,7 @@ class WebshopappApiResourceBrandsImage
      */
     public function create($brandId, $fields)
     {
-        if (strpos($fields['attachment'], 'http') === false) {
+        if (isset($fields['attachment']) && is_string($fields['attachment']) && $fields['attachment'] !== '' && strpos($fields['attachment'], 'http') === false) {
             try {
                 $attachment = $fields['attachment'];
 
@@ -1967,7 +1985,7 @@ class WebshopappApiResourceCategoriesImage
      */
     public function create($categoryId, $fields)
     {
-        if (strpos($fields['attachment'], 'http') === false) {
+        if (isset($fields['attachment']) && is_string($fields['attachment']) && $fields['attachment'] !== '' && strpos($fields['attachment'], 'http') === false) {
             try {
                 $attachment = $fields['attachment'];
 
@@ -2937,60 +2955,6 @@ class WebshopappApiResourceDiscounts
     }
 }
 
-class WebshopappApiResourceEvents
-{
-    /**
-     * @var WebshopappApiClient
-     */
-    private $client;
-
-    public function __construct(WebshopappApiClient $client)
-    {
-        $this->client = $client;
-    }
-
-    /**
-     * @param int $eventId
-     * @param array $params
-     *
-     * @return array
-     * @throws WebshopappApiException
-     */
-    public function get($eventId = null, $params = array())
-    {
-        if (!$eventId)
-        {
-            return $this->client->read('events', $params);
-        }
-        else
-        {
-            return $this->client->read('events/' . $eventId, $params);
-        }
-    }
-
-    /**
-     * @param array $params
-     *
-     * @return int
-     * @throws WebshopappApiException
-     */
-    public function count($params = array())
-    {
-        return $this->client->read('events/count', $params);
-    }
-
-    /**
-     * @param int $eventId
-     *
-     * @return array
-     * @throws WebshopappApiException
-     */
-    public function delete($eventId)
-    {
-        return $this->client->delete('events/' . $eventId);
-    }
-}
-
 class WebshopappApiResourceExternal_services
 {
     /**
@@ -3078,7 +3042,7 @@ class WebshopappApiResourceFiles
      */
     public function create($fields)
     {
-        if (strpos($fields['attachment'], 'http') === false) {
+        if (isset($fields['attachment']) && is_string($fields['attachment']) && $fields['attachment'] !== '' && strpos($fields['attachment'], 'http') === false) {
             try {
                 $attachment = $fields['attachment'];
 
@@ -4493,7 +4457,7 @@ class WebshopappApiResourceProductsImages
      */
     public function create($productId, $fields)
     {
-        if (strpos($fields['attachment'], 'http') === false) {
+        if (isset($fields['attachment']) && is_string($fields['attachment']) && $fields['attachment'] !== '' && strpos($fields['attachment'], 'http') === false) {
             try {
                 $attachment = $fields['attachment'];
 
@@ -4749,6 +4713,87 @@ class WebshopappApiResourceProductsRelations
     }
 }
 
+class WebshopappApiResourceQuantity_discounts
+{
+    /**
+     * @var WebshopappApiClient
+     */
+    private $client;
+
+    public function __construct(WebshopappApiClient $client)
+    {
+        $this->client = $client;
+    }
+
+    /**
+     * @param int $quantityDiscountId
+     * @param array $params
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function get($quantityDiscountId = null, $params = array())
+    {
+        if (!$quantityDiscountId)
+        {
+            return $this->client->read('quantity_discounts', $params);
+        }
+        else
+        {
+            return $this->client->read('quantity_discounts/' . $quantityDiscountId, $params);
+        }
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return int
+     * @throws WebshopappApiException
+     */
+    public function count($params = array())
+    {
+        return $this->client->read('quantity_discounts/count', $params);
+    }
+
+    /**
+     * @param array $fields
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function create($fields)
+    {
+        $fields = array('quantityDiscount' => $fields);
+
+        return $this->client->create('quantity_discounts', $fields);
+    }
+
+    /**
+     * @param int $quantityDiscountId
+     * @param array $fields
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function update($quantityDiscountId, $fields)
+    {
+        $fields = array('quantityDiscount' => $fields);
+
+        return $this->client->update('quantity_discounts/' . $quantityDiscountId, $fields);
+    }
+
+    /**
+     * @param int $quantityDiscountId
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function delete($quantityDiscountId)
+    {
+        return $this->client->delete('quantity_discounts/' . $quantityDiscountId);
+    }
+}
+
 class WebshopappApiResourceQuotes
 {
     /**
@@ -4816,33 +4861,6 @@ class WebshopappApiResourceQuotes
         $fields = array('quote' => $fields);
 
         return $this->client->update('quotes/' . $quoteId, $fields);
-    }
-}
-
-class WebshopappApiResourceQuotesConvert
-{
-    /**
-     * @var WebshopappApiClient
-     */
-    private $client;
-
-    public function __construct(WebshopappApiClient $client)
-    {
-        $this->client = $client;
-    }
-
-    /**
-     * @param int $quoteId
-     * @param array $fields
-     *
-     * @return array
-     * @throws WebshopappApiException
-     */
-    public function create($quoteId, $fields)
-    {
-        $fields = array('order' => $fields);
-
-        return $this->client->create('quotes/' . $quoteId . '/convert', $fields);
     }
 }
 
@@ -7456,5 +7474,75 @@ class WebshopappApiResourceWebhooks
     public function delete($webhookId)
     {
         return $this->client->delete('webhooks/' . $webhookId);
+    }
+}
+
+class WebshopappApiResourceWithdrawals
+{
+    /**
+     * @var WebshopappApiClient
+     */
+    private $client;
+
+    public function __construct(WebshopappApiClient $client)
+    {
+        $this->client = $client;
+    }
+
+    /**
+     * @param array $fields
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function create($fields)
+    {
+        $fields = array('withdrawal' => $fields);
+
+        return $this->client->create('withdrawals', $fields);
+    }
+
+    /**
+     * @param int $withdrawalId
+     * @param array $params
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function get($withdrawalId = null, $params = array())
+    {
+        if (!$withdrawalId)
+        {
+            return $this->client->read('withdrawals', $params);
+        }
+        else
+        {
+            return $this->client->read('withdrawals/' . $withdrawalId, $params);
+        }
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return int
+     * @throws WebshopappApiException
+     */
+    public function count($params = array())
+    {
+        return $this->client->read('withdrawals/count', $params);
+    }
+
+    /**
+     * @param int $withdrawalId
+     * @param array $fields
+     *
+     * @return array
+     * @throws WebshopappApiException
+     */
+    public function update($withdrawalId, $fields)
+    {
+        $fields = array('withdrawal' => $fields);
+
+        return $this->client->update('withdrawals/' . $withdrawalId, $fields);
     }
 }
